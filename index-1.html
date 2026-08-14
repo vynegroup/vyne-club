@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>VYNÉ CLUB</title>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root {
+    --black: #080808;
+    --cream: #f2eee5;
+    --line: rgba(242,238,229,.42);
+    --muted: rgba(242,238,229,.65);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: "Space Mono", monospace;
+    display: flex;
+    justify-content: center;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    position: relative;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =====================================================
+   REGISTRATION
+===================================================== */
+
+.registration-screen {
+    min-height: 100vh;
+    padding: 42px 30px 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-label {
+    font-size: 11px;
+    letter-spacing: .35em;
+    opacity: .55;
+    margin-bottom: 80px;
+}
+
+.registration-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(54px, 15vw, 72px);
+    line-height: .9;
+    letter-spacing: .01em;
+    margin-bottom: 28px;
+}
+
+.registration-copy {
+    font-size: 12px;
+    letter-spacing: .08em;
+    line-height: 1.7;
+    opacity: .65;
+    max-width: 300px;
+    margin-bottom: 55px;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-form label {
+    font-size: 10px;
+    letter-spacing: .25em;
+    opacity: .55;
+    margin-bottom: 10px;
+}
+
+.registration-form input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    font-size: 15px;
+    padding: 12px 0;
+    outline: none;
+    margin-bottom: 30px;
+    border-radius: 0;
+}
+
+.registration-form input::placeholder {
+    color: var(--muted);
+    opacity: .55;
+}
+
+.registration-form input:focus {
+    border-bottom-color: var(--cream);
+}
+
+#registerButton {
+    width: 100%;
+    margin-top: 18px;
+    padding: 18px;
+    background: var(--cream);
+    color: var(--black);
+    border: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    cursor: pointer;
+}
+
+#registerButton:disabled {
+    opacity: .5;
+}
+
+.register-status {
+    min-height: 18px;
+    margin-top: 18px;
+    font-size: 10px;
+    line-height: 1.6;
+    letter-spacing: .08em;
+    opacity: .7;
+}
+
+/* =====================================================
+   MEMBER SCREEN
+===================================================== */
+
+.member-screen {
+    min-height: 100vh;
+    padding: 42px 30px 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.brand {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.club-name {
+    font-family: "Caveat", cursive;
+    font-size: 58px;
+    font-weight: 500;
+    line-height: .8;
+    letter-spacing: 2px;
+}
+
+.club-subtitle {
+    margin-top: 28px;
+    font-size: 10px;
+    letter-spacing: 4px;
+}
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.intro {
+    margin-bottom: 22px;
+}
+
+.intro-text {
+    font-size: 12px;
+    line-height: 2;
+    letter-spacing: 4px;
+}
+
+.rule {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+    margin-top: 28px;
+}
+
+/* =====================================================
+   MEMBER
+===================================================== */
+
+.member-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 64px;
+    letter-spacing: 2px;
+    line-height: .95;
+    margin-top: 34px;
+}
+
+.total-number {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 150px;
+    line-height: .75;
+    letter-spacing: -3px;
+    margin-top: 38px;
+}
+
+.total-label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    margin-top: 28px;
+    color: var(--muted);
+}
+
+/* =====================================================
+   ACTIVITY
+===================================================== */
+
+.activity {
+    margin-top: 46px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.section-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-bottom: 30px;
+}
+
+.activity-brand + .activity-brand {
+    margin-top: 34px;
+}
+
+.activity-brand-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 18px;
+}
+
+.activity-brand-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 32px;
+    letter-spacing: 1.5px;
+    line-height: 1;
+}
+
+.activity-count {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.brand-stamps {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.brand-stamp {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--cream);
+    border-radius: 50%;
+}
+
+.brand-stamp.active {
+    background: var(--cream);
+}
+
+/* =====================================================
+   REWARD
+===================================================== */
+
+.reward {
+    margin-top: 46px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.reward-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.reward-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    line-height: .95;
+}
+
+.reward-status {
+    font-size: 10px;
+    letter-spacing: 2px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+/* =====================================================
+   BOTTOM
+===================================================== */
+
+.bottom {
+    margin-top: auto;
+    padding-top: 55px;
+}
+
+.qr-button {
+    width: 100%;
+    height: 62px;
+    border: 1px solid var(--cream);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--cream);
+    font-size: 12px;
+    letter-spacing: 5px;
+    cursor: pointer;
+}
+
+.qr-button:active {
+    transform: scale(.98);
+    background: var(--cream);
+    color: var(--black);
+}
+
+.vyne-logo {
+    text-align: right;
+    margin-top: -4px;
+    margin-bottom: 28px;
+    padding-top: 28px;
+}
+
+.vyne-logo-main {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 28px;
+}
+
+.vyne-logo-co {
+    font-family: Georgia, serif;
+    font-size: 11px;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+    width: calc(100% + 60px);
+    margin-left: -30px;
+    padding: 22px 15px;
+    background: var(--cream);
+    color: var(--black);
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+}
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 340px;
+    background: var(--cream);
+    color: var(--black);
+    padding: 35px;
+    text-align: center;
+}
+
+.modal-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 42px;
+}
+
+.modal-name {
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-top: 8px;
+}
+
+.qr-container {
+    width: 220px;
+    height: 220px;
+    margin: 30px auto;
+    background: white;
+    padding: 10px;
+}
+
+.qr-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.close-button {
+    width: 100%;
+    height: 50px;
+    border: 1px solid var(--black);
+    background: transparent;
+    color: var(--black);
+    letter-spacing: 3px;
+}
+
+.loading {
+    opacity: .5;
+}
+
+@media (max-width: 360px) {
+
+    .member-screen,
+    .registration-screen {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .footer {
+        width: calc(100% + 44px);
+        margin-left: -22px;
+    }
+
+    .club-name {
+        font-size: 50px;
+    }
+
+    .member-name {
+        font-size: 56px;
+    }
+
+    .total-number {
+        font-size: 130px;
+    }
+
+    .activity-brand-name {
+        font-size: 29px;
+    }
+
+    .brand-stamps {
+        gap: 6px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="app">
+
+<!-- =====================================================
+     REGISTRATION SCREEN
+===================================================== -->
+
+<section
+    id="registrationScreen"
+    class="registration-screen"
+>
+
+    <div class="registration-label">
+        VYNÉ CLUB
+    </div>
+
+    <div class="registration-title">
+        WELCOME TO<br>
+        THE CLUB.
+    </div>
+
+    <div class="registration-copy">
+        A little loyalty goes a long way.
+    </div>
+
+    <div class="registration-form">
+
+        <label for="registerName">
+            NAME
+        </label>
+
+        <input
+            id="registerName"
+            type="text"
+            placeholder="YOUR NAME"
+            autocomplete="name"
+        >
+
+        <label for="registerPhone">
+            WHATSAPP
+        </label>
+
+        <input
+            id="registerPhone"
+            type="tel"
+            inputmode="numeric"
+            placeholder="08XXXXXXXXXX"
+            autocomplete="tel"
+        >
+
+        <button
+            id="registerButton"
+            type="button"
+        >
+            JOIN THE CLUB
+        </button>
+
+        <div
+            id="registerStatus"
+            class="register-status"
+        ></div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     MEMBER SCREEN
+===================================================== -->
+
+<section
+    id="memberScreen"
+    class="member-screen hidden"
+>
+
+    <header class="brand">
+
+        <div class="club-name">
+            VYNÉ CLUB
+        </div>
+
+        <div class="club-subtitle">
+            A VYNÉ GROUP EXPERIENCE
+        </div>
+
+    </header>
+
+    <section class="intro">
+
+        <div class="intro-text">
+            LOOK AT YOU,<br>
+            MAKING GOOD DECISIONS.
+        </div>
+
+        <div class="rule"></div>
+
+    </section>
+
+    <section>
+
+        <div
+            id="memberName"
+            class="member-name loading"
+        >
+            LOADING
+        </div>
+
+        <div
+            id="totalVisits"
+            class="total-number"
+        >
+            0
+        </div>
+
+        <div class="total-label">
+            TOTAL VYNÉ VISITS
+        </div>
+
+    </section>
+
+    <section class="activity">
+
+        <div class="section-label">
+            ACTIVITY
+        </div>
+
+        <div class="activity-brand">
+
+            <div class="activity-brand-head">
+
+                <div class="activity-brand-name">
+                    PINE HÄUS
+                </div>
+
+                <div
+                    id="pineCount"
+                    class="activity-count"
+                >
+                    0 VISITS
+                </div>
+
+            </div>
+
+            <div
+                id="pineStamps"
+                class="brand-stamps"
+            ></div>
+
+        </div>
+
+        <div class="activity-brand">
+
+            <div class="activity-brand-head">
+
+                <div class="activity-brand-name">
+                    MIMOMI
+                </div>
+
+                <div
+                    id="mimomiCount"
+                    class="activity-count"
+                >
+                    0 VISITS
+                </div>
+
+            </div>
+
+            <div
+                id="mimomiStamps"
+                class="brand-stamps"
+            ></div>
+
+        </div>
+
+        <div class="activity-brand">
+
+            <div class="activity-brand-head">
+
+                <div class="activity-brand-name">
+                    COMPØUND
+                </div>
+
+                <div
+                    id="compoundCount"
+                    class="activity-count"
+                >
+                    0 VISITS
+                </div>
+
+            </div>
+
+            <div
+                id="compoundStamps"
+                class="brand-stamps"
+            ></div>
+
+        </div>
+
+    </section>
+
+    <section class="reward">
+
+        <div class="reward-label">
+            YOUR REWARDS
+        </div>
+
+        <div
+            id="rewardName"
+            class="reward-name"
+        >
+            NOTHING YET.
+        </div>
+
+        <div
+            id="rewardStatus"
+            class="reward-status"
+        >
+            KEEP SHOWING UP.
+        </div>
+
+    </section>
+
+    <section class="bottom">
+
+        <button
+            id="qrButton"
+            class="qr-button"
+        >
+            MY QR
+        </button>
+
+        <div class="vyne-logo">
+
+            <span class="vyne-logo-main">
+                vyné
+            </span>
+
+            <span class="vyne-logo-co">
+                co.
+            </span>
+
+        </div>
+
+    </section>
+
+    <footer class="footer">
+
+        PINE HÄUS
+        &nbsp; • &nbsp;
+        MIMOMI
+        &nbsp; • &nbsp;
+        COMPØUND
+
+    </footer>
+
+</section>
+
+</main>
+
+<!-- =====================================================
+     QR MODAL
+===================================================== -->
+
+<div
+    id="qrModal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+        <div class="modal-title">
+            VYNÉ CLUB
+        </div>
+
+        <div
+            id="qrName"
+            class="modal-name"
+        >
+            MEMBER
+        </div>
+
+        <div class="qr-container">
+
+            <img
+                id="qrImage"
+                src=""
+                alt="VYNÉ CLUB QR"
+            >
+
+        </div>
+
+        <button
+            id="closeQr"
+            class="close-button"
+        >
+            CLOSE
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =====================================================
+   SUPABASE CONFIG
+===================================================== */
+
+const SUPABASE_URL =
+    "https://qlhvjveokciltwlebtbh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_XKP8TdUHtlQfD18OMCs7dQ_w3IZAGqy";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+/* =====================================================
+   MEMBER SESSION
+===================================================== */
+
+const STORAGE_KEY =
+    "vyne_member_id";
+
+let MEMBER_ID =
+    null;
+
+/*
+   MASTER OUTLET IDS
+
+   1 = COMPØUND
+   2 = PINE HÄUS
+   3 = MIMOMI GENTENG
+   4 = MIMOMI JAJAG
+
+   Customer UI combines both Mimomi locations
+   into one MIMOMI brand activity.
+*/
+
+const OUTLETS = {
+    COMPOUND: 1,
+    PINE: 2,
+    MIMOMI_GENTENG: 3,
+    MIMOMI_JAJAG: 4
+};
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const registrationScreen =
+    document.getElementById(
+        "registrationScreen"
+    );
+
+const memberScreen =
+    document.getElementById(
+        "memberScreen"
+    );
+
+const registerName =
+    document.getElementById(
+        "registerName"
+    );
+
+const registerPhone =
+    document.getElementById(
+        "registerPhone"
+    );
+
+const registerButton =
+    document.getElementById(
+        "registerButton"
+    );
+
+const registerStatus =
+    document.getElementById(
+        "registerStatus"
+    );
+
+const memberName =
+    document.getElementById(
+        "memberName"
+    );
+
+const totalVisits =
+    document.getElementById(
+        "totalVisits"
+    );
+
+const pineCount =
+    document.getElementById(
+        "pineCount"
+    );
+
+const mimomiCount =
+    document.getElementById(
+        "mimomiCount"
+    );
+
+const compoundCount =
+    document.getElementById(
+        "compoundCount"
+    );
+
+const pineStamps =
+    document.getElementById(
+        "pineStamps"
+    );
+
+const mimomiStamps =
+    document.getElementById(
+        "mimomiStamps"
+    );
+
+const compoundStamps =
+    document.getElementById(
+        "compoundStamps"
+    );
+
+const rewardName =
+    document.getElementById(
+        "rewardName"
+    );
+
+const rewardStatus =
+    document.getElementById(
+        "rewardStatus"
+    );
+
+const qrButton =
+    document.getElementById(
+        "qrButton"
+    );
+
+const qrModal =
+    document.getElementById(
+        "qrModal"
+    );
+
+const closeQr =
+    document.getElementById(
+        "closeQr"
+    );
+
+const qrImage =
+    document.getElementById(
+        "qrImage"
+    );
+
+const qrName =
+    document.getElementById(
+        "qrName"
+    );
+
+/* =====================================================
+   SCREEN CONTROL
+===================================================== */
+
+function showRegistrationScreen() {
+
+    registrationScreen.classList.remove(
+        "hidden"
+    );
+
+    memberScreen.classList.add(
+        "hidden"
+    );
+
+}
+
+function showMemberScreen() {
+
+    registrationScreen.classList.add(
+        "hidden"
+    );
+
+    memberScreen.classList.remove(
+        "hidden"
+    );
+
+}
+
+/* =====================================================
+   ACTIVITY CIRCLES
+===================================================== */
+
+function renderBrandStamps(
+    container,
+    count
+) {
+
+    container.innerHTML =
+        "";
+
+    /*
+       The 10 circles are a visual activity strip,
+       NOT a reward threshold.
+
+       Reward rules will be controlled separately
+       by the reward engine later.
+    */
+
+    for (
+        let i = 1;
+        i <= 10;
+        i++
+    ) {
+
+        const stamp =
+            document.createElement(
+                "div"
+            );
+
+        stamp.className =
+            "brand-stamp";
+
+        if (
+            i <= Math.min(
+                count,
+                10
+            )
+        ) {
+
+            stamp.classList.add(
+                "active"
+            );
+
+        }
+
+        container.appendChild(
+            stamp
+        );
+
+    }
+
+}
+
+function visitText(count) {
+
+    return (
+        count +
+        " " +
+        (
+            count === 1
+                ? "VISIT"
+                : "VISITS"
+        )
+    );
+
+}
+
+function resetActivity() {
+
+    totalVisits.textContent =
+        "0";
+
+    pineCount.textContent =
+        "0 VISITS";
+
+    mimomiCount.textContent =
+        "0 VISITS";
+
+    compoundCount.textContent =
+        "0 VISITS";
+
+    renderBrandStamps(
+        pineStamps,
+        0
+    );
+
+    renderBrandStamps(
+        mimomiStamps,
+        0
+    );
+
+    renderBrandStamps(
+        compoundStamps,
+        0
+    );
+
+}
+
+/* =====================================================
+   LOAD MEMBER
+===================================================== */
+
+async function loadMember() {
+
+    if (!MEMBER_ID) {
+        return false;
+    }
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("members")
+            .select(
+                "id, name, phone"
+            )
+            .eq(
+                "id",
+                MEMBER_ID
+            )
+            .maybeSingle();
+
+    if (error) {
+
+        console.error(
+            "LOAD MEMBER ERROR:",
+            error
+        );
+
+        return false;
+
+    }
+
+    if (!data) {
+
+        console.warn(
+            "MEMBER NOT FOUND:",
+            MEMBER_ID
+        );
+
+        return false;
+
+    }
+
+    const name =
+        data.name ||
+        "MEMBER";
+
+    memberName.classList.remove(
+        "loading"
+    );
+
+    memberName.textContent =
+        String(
+            name
+        ).toUpperCase();
+
+    qrName.textContent =
+        String(
+            name
+        ).toUpperCase();
+
+    return true;
+
+}
+
+/* =====================================================
+   LOAD VYNÉ ACTIVITY
+===================================================== */
+
+async function loadActivity() {
+
+    if (!MEMBER_ID) {
+
+        resetActivity();
+
+        return;
+
+    }
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("stamps")
+            .select(
+                "outlet_id, stamps"
+            )
+            .eq(
+                "member_id",
+                MEMBER_ID
+            );
+
+    if (error) {
+
+        console.error(
+            "LOAD ACTIVITY ERROR:",
+            error
+        );
+
+        resetActivity();
+
+        return;
+
+    }
+
+    let pine =
+        0;
+
+    let mimomi =
+        0;
+
+    let compound =
+        0;
+
+    (
+        data ||
+        []
+    ).forEach(
+        function(row) {
+
+            const outletId =
+                Number(
+                    row.outlet_id
+                );
+
+            const count =
+                Number(
+                    row.stamps ||
+                    0
+                );
+
+            if (
+                outletId ===
+                OUTLETS.PINE
+            ) {
+
+                pine +=
+                    count;
+
+            }
+
+            if (
+                outletId ===
+                OUTLETS.MIMOMI_GENTENG ||
+                outletId ===
+                OUTLETS.MIMOMI_JAJAG
+            ) {
+
+                mimomi +=
+                    count;
+
+            }
+
+            if (
+                outletId ===
+                OUTLETS.COMPOUND
+            ) {
+
+                compound +=
+                    count;
+
+            }
+
+        }
+    );
+
+    const total =
+        pine +
+        mimomi +
+        compound;
+
+    totalVisits.textContent =
+        String(total);
+
+    pineCount.textContent =
+        visitText(
+            pine
+        );
+
+    mimomiCount.textContent =
+        visitText(
+            mimomi
+        );
+
+    compoundCount.textContent =
+        visitText(
+            compound
+        );
+
+    renderBrandStamps(
+        pineStamps,
+        pine
+    );
+
+    renderBrandStamps(
+        mimomiStamps,
+        mimomi
+    );
+
+    renderBrandStamps(
+        compoundStamps,
+        compound
+    );
+
+}
+
+/* =====================================================
+   REWARDS
+===================================================== */
+
+function loadRewardPlaceholder() {
+
+    /*
+       Reward rules intentionally remain inactive
+       until Vyné decides the commercial mechanics.
+
+       The UI is already separated from visit activity,
+       so future rewards do not need to change the
+       activity architecture.
+    */
+
+    rewardName.textContent =
+        "NOTHING YET.";
+
+    rewardStatus.textContent =
+        "KEEP SHOWING UP.";
+
+}
+
+/* =====================================================
+   QR
+===================================================== */
+
+function openQr() {
+
+    if (!MEMBER_ID) {
+        return;
+    }
+
+    /*
+       QR identifies the MEMBER only.
+
+       Outlet is intentionally NOT stored inside
+       the customer QR.
+
+       The staff account determines where
+       the scan happened.
+    */
+
+    const qrData =
+        encodeURIComponent(
+            JSON.stringify({
+                type:
+                    "vyne-club",
+                member_id:
+                    MEMBER_ID
+            })
+        );
+
+    qrImage.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
+        qrData;
+
+    qrModal.classList.add(
+        "show"
+    );
+
+}
+
+function closeQrModal() {
+
+    qrModal.classList.remove(
+        "show"
+    );
+
+}
+
+if (qrButton) {
+
+    qrButton.addEventListener(
+        "click",
+        openQr
+    );
+
+}
+
+if (closeQr) {
+
+    closeQr.addEventListener(
+        "click",
+        closeQrModal
+    );
+
+}
+
+if (qrModal) {
+
+    qrModal.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                qrModal
+            ) {
+
+                closeQrModal();
+
+            }
+
+        }
+    );
+
+}
+
+/* =====================================================
+   REGISTRATION
+===================================================== */
+
+if (registerButton) {
+
+    registerButton.addEventListener(
+        "click",
+        async function () {
+
+            const name =
+                registerName.value
+                    .trim();
+
+            const phone =
+                registerPhone.value
+                    .trim()
+                    .replace(
+                        /\s+/g,
+                        ""
+                    )
+                    .replace(
+                        /-/g,
+                        ""
+                    );
+
+            if (
+                !name ||
+                !phone
+            ) {
+
+                registerStatus.textContent =
+                    "PLEASE COMPLETE YOUR DETAILS.";
+
+                return;
+
+            }
+
+            if (
+                phone.length <
+                9
+            ) {
+
+                registerStatus.textContent =
+                    "PLEASE CHECK YOUR WHATSAPP NUMBER.";
+
+                return;
+
+            }
+
+            registerButton.disabled =
+                true;
+
+            registerButton.textContent =
+                "CHECKING...";
+
+            registerStatus.textContent =
+                "";
+
+            const {
+                data:
+                    existingMember,
+                error:
+                    checkError
+            } =
+                await supabaseClient
+                    .from(
+                        "members"
+                    )
+                    .select(
+                        "id, name, phone"
+                    )
+                    .eq(
+                        "phone",
+                        phone
+                    )
+                    .maybeSingle();
+
+            if (checkError) {
+
+                console.error(
+                    "CHECK MEMBER ERROR:",
+                    checkError
+                );
+
+                registerButton.disabled =
+                    false;
+
+                registerButton.textContent =
+                    "JOIN THE CLUB";
+
+                registerStatus.textContent =
+                    "SORRY. SOMETHING WENT WRONG.";
+
+                return;
+
+            }
+
+            if (
+                existingMember
+            ) {
+
+                MEMBER_ID =
+                    Number(
+                        existingMember.id
+                    );
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    String(
+                        MEMBER_ID
+                    )
+                );
+
+                memberName.classList.remove(
+                    "loading"
+                );
+
+                memberName.textContent =
+                    String(
+                        existingMember.name
+                    ).toUpperCase();
+
+                qrName.textContent =
+                    String(
+                        existingMember.name
+                    ).toUpperCase();
+
+                await loadActivity();
+
+                loadRewardPlaceholder();
+
+                showMemberScreen();
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "instant"
+                });
+
+                registerButton.disabled =
+                    false;
+
+                registerButton.textContent =
+                    "JOIN THE CLUB";
+
+                return;
+
+            }
+
+            registerButton.textContent =
+                "JOINING...";
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from(
+                        "members"
+                    )
+                    .insert([
+                        {
+                            name:
+                                name,
+                            phone:
+                                phone
+                        }
+                    ])
+                    .select(
+                        "id, name, phone"
+                    )
+                    .single();
+
+            if (error) {
+
+                console.error(
+                    "REGISTRATION ERROR:",
+                    error
+                );
+
+                registerButton.disabled =
+                    false;
+
+                registerButton.textContent =
+                    "JOIN THE CLUB";
+
+                registerStatus.textContent =
+                    "SORRY. SOMETHING WENT WRONG.";
+
+                return;
+
+            }
+
+            MEMBER_ID =
+                Number(
+                    data.id
+                );
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                String(
+                    MEMBER_ID
+                )
+            );
+
+            memberName.classList.remove(
+                "loading"
+            );
+
+            memberName.textContent =
+                String(
+                    data.name
+                ).toUpperCase();
+
+            qrName.textContent =
+                String(
+                    data.name
+                ).toUpperCase();
+
+            resetActivity();
+
+            loadRewardPlaceholder();
+
+            showMemberScreen();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "instant"
+            });
+
+            registerButton.disabled =
+                false;
+
+            registerButton.textContent =
+                "JOIN THE CLUB";
+
+        }
+    );
+
+}
+
+/* =====================================================
+   INIT
+===================================================== */
+
+async function init() {
+
+    const savedMemberId =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+    if (savedMemberId) {
+
+        MEMBER_ID =
+            Number(
+                savedMemberId
+            );
+
+        if (
+            MEMBER_ID &&
+            Number.isFinite(
+                MEMBER_ID
+            )
+        ) {
+
+            showMemberScreen();
+
+            const memberExists =
+                await loadMember();
+
+            if (
+                memberExists
+            ) {
+
+                await loadActivity();
+
+                loadRewardPlaceholder();
+
+                return;
+
+            }
+
+        }
+
+        localStorage.removeItem(
+            STORAGE_KEY
+        );
+
+        MEMBER_ID =
+            null;
+
+    }
+
+    showRegistrationScreen();
+
+    resetActivity();
+
+    loadRewardPlaceholder();
+
+}
+
+init();
+
+</script>
+
+</body>
+
+</html>
