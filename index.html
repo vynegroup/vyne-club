@@ -346,13 +346,167 @@ button {
     }
 
 }
+/* =====================================================
+   REGISTRATION
+===================================================== */
 
+.registration-screen {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 42px 30px 50px;
+    position: relative;
+}
+
+.registration-label {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    opacity: 0.55;
+    margin-bottom: 80px;
+}
+
+.registration-title {
+    font-size: clamp(42px, 12vw, 58px);
+    line-height: 0.95;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-bottom: 28px;
+}
+
+.registration-copy {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    opacity: 0.65;
+    max-width: 280px;
+    margin-bottom: 55px;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-form label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    opacity: 0.55;
+    margin-bottom: 10px;
+}
+
+.registration-form input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 12px 0;
+    outline: none;
+    margin-bottom: 30px;
+    border-radius: 0;
+}
+
+.registration-form input::placeholder {
+    color: var(--muted);
+    opacity: 0.55;
+}
+
+.registration-form input:focus {
+    border-bottom-color: var(--cream);
+}
+
+#registerButton {
+    width: 100%;
+    margin-top: 18px;
+    padding: 17px 18px;
+    background: var(--cream);
+    color: var(--black);
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+}
+
+#registerButton:disabled {
+    opacity: 0.5;
+}
+
+.register-status {
+    min-height: 18px;
+    margin-top: 18px;
+    font-size: 10px;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    }
 </style>
 </head>
 
 <body>
 
 <main class="app">
+    <!-- ================================
+     REGISTRATION
+================================ -->
+
+<section id="registrationScreen" class="registration-screen">
+
+    <div class="registration-label">
+        VYNÉ CLUB
+    </div>
+
+    <div class="registration-title">
+        WELCOME TO<br>
+        THE CLUB.
+    </div>
+
+    <div class="registration-copy">
+        A little loyalty goes a long way.
+    </div>
+
+    <div class="registration-form">
+
+        <label for="registerName">
+            NAME
+        </label>
+
+        <input
+            id="registerName"
+            type="text"
+            placeholder="YOUR NAME"
+            autocomplete="name"
+        >
+
+        <label for="registerPhone">
+            WHATSAPP
+        </label>
+
+        <input
+            id="registerPhone"
+            type="tel"
+            placeholder="08XXXXXXXXXX"
+            autocomplete="tel"
+        >
+
+        <button
+            id="registerButton"
+            type="button"
+        >
+            JOIN THE CLUB
+        </button>
+
+        <div
+            id="registerStatus"
+            class="register-status"
+        ></div>
+
+    </div>
+
+</section>
 
     <!-- HEADER -->
 
