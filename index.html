@@ -975,7 +975,109 @@ qrModal.addEventListener(
     }
 );
 
+/* =====================================================
+   REGISTRATION
+===================================================== */
 
+const registerName =
+    document.getElementById("registerName");
+
+const registerPhone =
+    document.getElementById("registerPhone");
+
+const registerButton =
+    document.getElementById("registerButton");
+
+const registerStatus =
+    document.getElementById("registerStatus");
+
+
+registerButton.addEventListener(
+    "click",
+    async function () {
+
+        const name =
+            registerName.value.trim();
+
+        const phone =
+            registerPhone.value.trim();
+
+
+        /* VALIDATION */
+
+        if (!name || !phone) {
+
+            registerStatus.textContent =
+                "PLEASE COMPLETE YOUR DETAILS.";
+
+            return;
+        }
+
+
+        /* LOADING */
+
+        registerButton.disabled = true;
+
+        registerButton.textContent =
+            "JOINING...";
+
+        registerStatus.textContent =
+            "";
+
+
+        /* INSERT MEMBER */
+
+        const { data, error } =
+            await supabaseClient
+                .from("members")
+                .insert([
+                    {
+                        name: name,
+                        phone: phone
+                    }
+                ])
+                .select()
+                .single();
+
+
+        /* ERROR */
+
+        if (error) {
+
+            console.error(error);
+
+            registerButton.disabled = false;
+
+            registerButton.textContent =
+                "JOIN THE CLUB";
+
+            registerStatus.textContent =
+                "SORRY. SOMETHING WENT WRONG.";
+
+            return;
+        }
+
+
+        /* SUCCESS */
+
+        console.log(
+            "MEMBER CREATED:",
+            data
+        );
+
+        registerStatus.textContent =
+            "WELCOME TO VYNÉ CLUB.";
+
+        registerButton.textContent =
+            "YOU'RE IN";
+
+
+        registerName.disabled = true;
+
+        registerPhone.disabled = true;
+
+    }
+);
 /* =====================================================
    INIT
 ===================================================== */
