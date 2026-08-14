@@ -1,182 +1,843 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VYNÉ CLUB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<title>VYNÉ CLUB</title>
 
-    body {
-      min-height: 100vh;
-      background: #f4efe7;
-      color: #241f1b;
-      font-family: Arial, Helvetica, sans-serif;
-      display: flex;
-      justify-content: center;
-    }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root {
+    --black: #080808;
+    --cream: #f2eee5;
+    --line: rgba(242,238,229,.42);
+    --muted: rgba(242,238,229,.65);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: "Space Mono", monospace;
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    font: inherit;
+}
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    padding: 42px 30px 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.brand {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.club-name {
+    font-family: "Caveat", cursive;
+    font-size: 58px;
+    font-weight: 500;
+    line-height: .8;
+    letter-spacing: 2px;
+}
+
+.club-subtitle {
+    margin-top: 28px;
+    font-size: 10px;
+    letter-spacing: 4px;
+}
+
+/* =========================
+   INTRO
+========================= */
+
+.intro {
+    margin-bottom: 22px;
+}
+
+.intro-text {
+    font-size: 12px;
+    line-height: 2;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.rule {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+    margin-top: 28px;
+}
+
+/* =========================
+   MEMBER
+========================= */
+
+.member-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 64px;
+    letter-spacing: 2px;
+    line-height: .95;
+    margin-top: 34px;
+}
+
+.stamp-number {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 150px;
+    line-height: .75;
+    letter-spacing: -3px;
+    margin-top: 38px;
+}
+
+.stamp-label {
+    font-size: 11px;
+    letter-spacing: 5px;
+    margin-top: 28px;
+    color: var(--muted);
+}
+
+/* =========================
+   STAMPS
+========================= */
+
+.stamps {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    margin-top: 28px;
+}
+
+.stamp {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--cream);
+    border-radius: 50%;
+    transition: .2s ease;
+}
+
+.stamp.active {
+    background: var(--cream);
+}
+
+/* =========================
+   REWARD
+========================= */
+
+.reward {
+    margin-top: 46px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.reward-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.reward-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 48px;
+    letter-spacing: 2px;
+    line-height: .95;
+}
+
+.reward-status {
+    font-size: 10px;
+    letter-spacing: 2px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+/* =========================
+   BOTTOM
+========================= */
+
+.bottom {
+    margin-top: auto;
+    padding-top: 55px;
+}
+
+.qr-button {
+    width: 100%;
+    height: 62px;
+    border: 1px solid var(--cream);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--cream);
+    font-size: 12px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.qr-button:active {
+    transform: scale(.98);
+    background: var(--cream);
+    color: var(--black);
+}
+
+.vyne-logo {
+    text-align: right;
+    margin-top: -4px;
+    margin-bottom: 28px;
+    padding-top: 28px;
+}
+
+.vyne-logo-main {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -1px;
+}
+
+.vyne-logo-co {
+    font-family: Georgia, serif;
+    font-size: 11px;
+    margin-left: 2px;
+}
+
+.footer {
+    width: calc(100% + 60px);
+    margin-left: -30px;
+    padding: 22px 15px;
+    background: var(--cream);
+    color: var(--black);
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 3px;
+    white-space: nowrap;
+}
+
+/* =========================
+   QR MODAL
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 340px;
+    background: var(--cream);
+    color: var(--black);
+    padding: 35px;
+    text-align: center;
+}
+
+.modal-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 42px;
+    letter-spacing: 2px;
+}
+
+.modal-name {
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-top: 8px;
+}
+
+.qr-container {
+    width: 220px;
+    height: 220px;
+    margin: 30px auto;
+    background: white;
+    padding: 10px;
+}
+
+.qr-container img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.close-button {
+    width: 100%;
+    height: 50px;
+    border: 1px solid var(--black);
+    background: transparent;
+    color: var(--black);
+    letter-spacing: 3px;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+    opacity: .5;
+}
+
+.error {
+    font-size: 10px;
+    line-height: 1.7;
+    color: #ff8c8c;
+    margin-top: 20px;
+}
+
+@media (max-width: 360px) {
 
     .app {
-      width: 100%;
-      max-width: 430px;
-      min-height: 100vh;
-      padding: 28px 22px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      margin-bottom: 70px;
-    }
-
-    .welcome {
-      font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 8px;
-      opacity: 0.65;
-    }
-
-    h1 {
-      font-size: 42px;
-      line-height: 1;
-      letter-spacing: -2px;
-      margin-bottom: 45px;
-    }
-
-    .stamp-number {
-      font-size: 88px;
-      line-height: 0.9;
-      font-weight: 700;
-      letter-spacing: -5px;
-    }
-
-    .stamp-label {
-      font-size: 12px;
-      letter-spacing: 3px;
-      margin-top: 12px;
-      opacity: 0.55;
-    }
-
-    .stamps {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 8px;
-      margin-top: 28px;
-      margin-bottom: 55px;
-    }
-
-    .stamp {
-      width: 100%;
-      aspect-ratio: 1;
-      border: 1.5px solid #241f1b;
-      border-radius: 50%;
-    }
-
-    .stamp.active {
-      background: #241f1b;
-    }
-
-    .reward {
-      border-top: 1px solid rgba(36, 31, 27, 0.25);
-      padding-top: 22px;
-      margin-bottom: 35px;
-    }
-
-    .reward-label {
-      font-size: 11px;
-      letter-spacing: 2px;
-      opacity: 0.55;
-      margin-bottom: 8px;
-    }
-
-    .reward-name {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-
-    .reward-status {
-      font-size: 13px;
-      opacity: 0.6;
-    }
-
-    .qr-button {
-      margin-top: auto;
-      width: 100%;
-      padding: 18px;
-      border: none;
-      border-radius: 999px;
-      background: #241f1b;
-      color: #f4efe7;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 2px;
+        padding-left: 22px;
+        padding-right: 22px;
     }
 
     .footer {
-      text-align: center;
-      font-size: 10px;
-      letter-spacing: 2px;
-      opacity: 0.4;
-      margin-top: 18px;
+        width: calc(100% + 44px);
+        margin-left: -22px;
     }
-  </style>
+
+    .club-name {
+        font-size: 50px;
+    }
+
+    .member-name {
+        font-size: 56px;
+    }
+
+    .stamp-number {
+        font-size: 130px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
-  <main class="app">
+<main class="app">
 
-    <div class="logo">VYNÉ CLUB</div>
+    <!-- HEADER -->
 
-    <div class="welcome">
-      Good things happen<br>
-      when you come back.
-    </div>
+    <header class="brand">
 
-    <h1>ANWAR</h1>
+        <div class="club-name">
+            VYNÉ CLUB
+        </div>
 
-    <div class="stamp-number">0</div>
-    <div class="stamp-label">STAMPS</div>
+        <div class="club-subtitle">
+            A VYNÉ GROUP EXPERIENCE
+        </div>
 
-    <div class="stamps">
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-      <div class="stamp"></div>
-    </div>
+    </header>
 
-    <section class="reward">
-      <div class="reward-label">YOUR REWARD</div>
-      <div class="reward-name">FREE COFFEE</div>
-      <div class="reward-status">
-        Collect 10 stamps to unlock
-      </div>
+
+    <!-- INTRO -->
+
+    <section class="intro">
+
+        <div class="intro-text">
+            LOOK AT YOU,<br>
+            MAKING GOOD DECISIONS.
+        </div>
+
+        <div class="rule"></div>
+
     </section>
 
-    <button class="qr-button">
-      MY QR
-    </button>
 
-    <div class="footer">
-      PINE HAUS · MIMOMI · COMPOUND
+    <!-- MEMBER -->
+
+    <section>
+
+        <div
+            id="memberName"
+            class="member-name loading">
+            LOADING
+        </div>
+
+
+        <div
+            id="stampNumber"
+            class="stamp-number">
+            0
+        </div>
+
+
+        <div class="stamp-label">
+            STAMPS
+        </div>
+
+
+        <div
+            id="stamps"
+            class="stamps">
+        </div>
+
+    </section>
+
+
+    <!-- REWARD -->
+
+    <section class="reward">
+
+        <div class="reward-label">
+            YOUR REWARD
+        </div>
+
+        <div
+            id="rewardName"
+            class="reward-name">
+            FREE COFFEE
+        </div>
+
+        <div
+            id="rewardStatus"
+            class="reward-status">
+            COLLECT 10 STAMPS TO UNLOCK
+        </div>
+
+    </section>
+
+
+    <!-- BOTTOM -->
+
+    <section class="bottom">
+
+        <button
+            id="qrButton"
+            class="qr-button">
+            MY QR
+        </button>
+
+
+        <div class="vyne-logo">
+
+            <span class="vyne-logo-main">
+                vyné
+            </span>
+
+            <span class="vyne-logo-co">
+                co.
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        PINE HÄUS
+        &nbsp; • &nbsp;
+        MIMOMI
+        &nbsp; • &nbsp;
+        COMPØUND
+
+    </footer>
+
+</main>
+
+
+<!-- QR MODAL -->
+
+<div
+    id="qrModal"
+    class="modal">
+
+    <div class="modal-card">
+
+        <div class="modal-title">
+            VYNÉ CLUB
+        </div>
+
+        <div
+            id="qrName"
+            class="modal-name">
+            MEMBER
+        </div>
+
+        <div class="qr-container">
+
+            <img
+                id="qrImage"
+                src=""
+                alt="VYNÉ CLUB QR">
+
+        </div>
+
+        <button
+            id="closeQr"
+            class="close-button">
+            CLOSE
+        </button>
+
     </div>
 
-  </main>
+</div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE CONFIG
+===================================================== */
+
+/*
+   GANTI 2 VALUE DI BAWAH INI DENGAN:
+
+   1. Supabase Project URL
+   2. Supabase anon/public key
+
+   JANGAN masukkan service_role key.
+*/
+
+const SUPABASE_URL =
+    "https://qlhvjveokciltwlebtbh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+   sb_publishable_XKP8TdUHtlQfD18OMCs7dQ_w3IZAGqy
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =====================================================
+   MEMBER CONFIG
+===================================================== */
+
+const MEMBER_ID = 1;
+const OUTLET_ID = 1;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const memberName =
+    document.getElementById("memberName");
+
+const stampNumber =
+    document.getElementById("stampNumber");
+
+const stamps =
+    document.getElementById("stamps");
+
+const rewardName =
+    document.getElementById("rewardName");
+
+const rewardStatus =
+    document.getElementById("rewardStatus");
+
+const qrButton =
+    document.getElementById("qrButton");
+
+const qrModal =
+    document.getElementById("qrModal");
+
+const closeQr =
+    document.getElementById("closeQr");
+
+const qrImage =
+    document.getElementById("qrImage");
+
+const qrName =
+    document.getElementById("qrName");
+
+
+/* =====================================================
+   CREATE STAMP CIRCLES
+===================================================== */
+
+function renderStamps(count) {
+
+    stamps.innerHTML = "";
+
+    for (let i = 1; i <= 10; i++) {
+
+        const stamp =
+            document.createElement("div");
+
+        stamp.className = "stamp";
+
+        if (i <= count) {
+            stamp.classList.add("active");
+        }
+
+        stamps.appendChild(stamp);
+    }
+
+}
+
+
+/* =====================================================
+   LOAD MEMBER
+===================================================== */
+
+async function loadMember() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("members")
+        .select("*")
+        .eq("id", MEMBER_ID)
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        memberName.classList.remove("loading");
+
+        memberName.innerHTML =
+            "MEMBER ERROR";
+
+        return;
+
+    }
+
+
+    /*
+       We try common column names.
+
+       If your members table uses:
+       name
+       full_name
+       member_name
+
+       it will automatically pick whichever exists.
+    */
+
+    const name =
+        data.name ||
+        data.full_name ||
+        data.member_name ||
+        "MEMBER";
+
+
+    memberName.classList.remove("loading");
+
+    memberName.textContent =
+        String(name).toUpperCase();
+
+
+    qrName.textContent =
+        String(name).toUpperCase();
+
+}
+
+
+/* =====================================================
+   LOAD STAMPS
+===================================================== */
+
+async function loadStamps() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("stamps")
+        .select("stamps")
+        .eq("member_id", MEMBER_ID)
+        .eq("outlet_id", OUTLET_ID)
+        .single();
+
+
+    if (error) {
+
+        console.error(error);
+
+        stampNumber.textContent = "0";
+
+        renderStamps(0);
+
+        return;
+
+    }
+
+
+    const count =
+        Number(data?.stamps || 0);
+
+
+    stampNumber.textContent =
+        count;
+
+
+    renderStamps(
+        Math.min(count, 10)
+    );
+
+
+    updateReward(count);
+
+}
+
+
+/* =====================================================
+   REWARD
+===================================================== */
+
+function updateReward(count) {
+
+    const required = 10;
+
+
+    if (count >= required) {
+
+        rewardName.textContent =
+            "FREE COFFEE";
+
+        rewardStatus.textContent =
+            "REWARD UNLOCKED";
+
+    } else {
+
+        const remaining =
+            required - count;
+
+        rewardName.textContent =
+            "FREE COFFEE";
+
+        rewardStatus.textContent =
+            "COLLECT " +
+            remaining +
+            " MORE STAMP" +
+            (remaining === 1 ? "" : "S") +
+            " TO UNLOCK";
+
+    }
+
+}
+
+
+/* =====================================================
+   QR
+===================================================== */
+
+function openQr() {
+
+    /*
+       QR contains member + outlet information.
+
+       Staff can scan this later to identify
+       the member.
+    */
+
+    const qrData =
+        encodeURIComponent(
+            JSON.stringify({
+                type: "vyne-club",
+                member_id: MEMBER_ID,
+                outlet_id: OUTLET_ID
+            })
+        );
+
+
+    qrImage.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" +
+        qrData;
+
+
+    qrModal.classList.add("show");
+
+}
+
+
+function closeQrModal() {
+
+    qrModal.classList.remove("show");
+
+}
+
+
+qrButton.addEventListener(
+    "click",
+    openQr
+);
+
+
+closeQr.addEventListener(
+    "click",
+    closeQrModal
+);
+
+
+qrModal.addEventListener(
+    "click",
+    function(event) {
+
+        if (event.target === qrModal) {
+            closeQrModal();
+        }
+
+    }
+);
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+async function init() {
+
+    await loadMember();
+
+    await loadStamps();
+
+}
+
+
+init();
+
+</script>
 
 </body>
-        </html>
+          </html>
