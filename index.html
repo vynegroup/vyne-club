@@ -1686,15 +1686,14 @@ if (registerButton) {
         "click",
         async function () {
 
-
             const name =
                 registerName.value.trim();
-
 
             const phone =
                 registerPhone.value
                     .trim()
-                    .replace(/\s+/g, "");
+                    .replace(/\s+/g, "")
+                    .replace(/-/g, "");
 
 
             /* =========================
@@ -1711,9 +1710,7 @@ if (registerButton) {
             }
 
 
-            if (
-                phone.length < 9
-            ) {
+            if (phone.length < 9) {
 
                 registerStatus.textContent =
                     "PLEASE CHECK YOUR WHATSAPP NUMBER.";
@@ -1727,19 +1724,105 @@ if (registerButton) {
                LOADING
             ========================= */
 
-            registerButton.disabled =
-                true;
+            registerButton.disabled = true;
+
+            registerButton.textContent =
+                "CHECKING...";
+
+            registerStatus.textContent = "";
+
+
+            /* =========================
+               CHECK EXISTING MEMBER
+            ========================= */
+
+            const {
+                data: existingMember,
+                error: checkError
+            } = await supabaseClient
+                .from("members")
+                .select("id, name, phone")
+                .eq("phone", phone)
+                .maybeSingle();
+
+
+            if (checkError) {
+
+                console.error(
+                    "CHECK MEMBER ERROR:",
+                    checkError
+                );
+
+                registerButton.disabled = false;
+
+                registerButton.textContent =
+                    "JOIN THE CLUB";
+
+                registerStatus.textContent =
+                    "SORRY. SOMETHING WENT WRONG.";
+
+                return;
+
+            }
+
+
+            /* =========================
+               RETURNING MEMBER
+            ========================= */
+
+            if (existingMember) {
+
+                MEMBER_ID =
+                    Number(existingMember.id);
+
+
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    String(MEMBER_ID)
+                );
+
+
+                memberName.classList.remove(
+                    "loading"
+                );
+
+
+                memberName.textContent =
+                    String(
+                        existingMember.name
+                    ).toUpperCase();
+
+
+                qrName.textContent =
+                    String(
+                        existingMember.name
+                    ).toUpperCase();
+
+
+                await loadStamps();
+
+
+                showMemberScreen();
+
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "instant"
+                });
+
+
+                return;
+
+            }
+
+
+            /* =========================
+               CREATE NEW MEMBER
+            ========================= */
 
             registerButton.textContent =
                 "JOINING...";
 
-            registerStatus.textContent =
-                "";
-
-
-            /* =========================
-               CREATE MEMBER
-            ========================= */
 
             const {
                 data,
@@ -1770,8 +1853,7 @@ if (registerButton) {
                 );
 
 
-                registerButton.disabled =
-                    false;
+                registerButton.disabled = false;
 
 
                 registerButton.textContent =
@@ -1788,7 +1870,7 @@ if (registerButton) {
 
 
             /* =========================
-               SAVE MEMBER ID
+               SAVE NEW MEMBER
             ========================= */
 
             MEMBER_ID =
@@ -1800,22 +1882,6 @@ if (registerButton) {
                 String(MEMBER_ID)
             );
 
-
-            console.log(
-                "MEMBER CREATED:",
-                data
-            );
-
-
-            console.log(
-                "MEMBER ID SAVED:",
-                MEMBER_ID
-            );
-
-
-            /* =========================
-               SHOW MEMBER CARD
-            ========================= */
 
             memberName.classList.remove(
                 "loading"
@@ -1840,9 +1906,7 @@ if (registerButton) {
 
             renderStamps(0);
 
-
             updateReward(0);
-
 
             showMemberScreen();
 
@@ -1855,7 +1919,7 @@ if (registerButton) {
         }
     );
 
-}
+                }
 
 
 /* =====================================================
