@@ -1276,357 +1276,195 @@ input:focus {
 
 <script>
 
-
 /* =====================================================
    SUPABASE CONFIG
 ===================================================== */
 
-
 const SUPABASE_URL =
     "https://qlhvjveokciltwlebtbh.supabase.co";
-
 
 const SUPABASE_ANON_KEY =
     "sb_publishable_XKP8TdUHtlQfD18OMCs7dQ_w3IZAGqy";
 
-
 const supabaseClient =
     window.supabase.createClient(
-
         SUPABASE_URL,
-
         SUPABASE_ANON_KEY
-
     );
 
 
-
 /* =====================================================
-   CONFIG
+   MEMBER SESSION
 ===================================================== */
 
+const STORAGE_KEY = "vyne_member_id";
 
 const OUTLET_ID = 1;
 
-
-const STORAGE_KEY =
-    "vyne_member_id";
-
-
-let currentMemberId =
-    null;
-
+let MEMBER_ID = null;
 
 
 /* =====================================================
    ELEMENTS
 ===================================================== */
 
-
 const registrationScreen =
-    document.getElementById(
-        "registrationScreen"
-    );
-
-
-const memberScreen =
-    document.getElementById(
-        "memberScreen"
-    );
-
+    document.getElementById("registrationScreen");
 
 const registerName =
-    document.getElementById(
-        "registerName"
-    );
-
+    document.getElementById("registerName");
 
 const registerPhone =
-    document.getElementById(
-        "registerPhone"
-    );
-
+    document.getElementById("registerPhone");
 
 const registerButton =
-    document.getElementById(
-        "registerButton"
-    );
-
+    document.getElementById("registerButton");
 
 const registerStatus =
-    document.getElementById(
-        "registerStatus"
-    );
+    document.getElementById("registerStatus");
 
 
 const memberName =
-    document.getElementById(
-        "memberName"
-    );
-
+    document.getElementById("memberName");
 
 const stampNumber =
-    document.getElementById(
-        "stampNumber"
-    );
-
+    document.getElementById("stampNumber");
 
 const stamps =
-    document.getElementById(
-        "stamps"
-    );
-
+    document.getElementById("stamps");
 
 const rewardName =
-    document.getElementById(
-        "rewardName"
-    );
-
+    document.getElementById("rewardName");
 
 const rewardStatus =
-    document.getElementById(
-        "rewardStatus"
-    );
-
+    document.getElementById("rewardStatus");
 
 const qrButton =
-    document.getElementById(
-        "qrButton"
-    );
-
+    document.getElementById("qrButton");
 
 const qrModal =
-    document.getElementById(
-        "qrModal"
-    );
-
+    document.getElementById("qrModal");
 
 const closeQr =
-    document.getElementById(
-        "closeQr"
-    );
-
+    document.getElementById("closeQr");
 
 const qrImage =
-    document.getElementById(
-        "qrImage"
-    );
-
+    document.getElementById("qrImage");
 
 const qrName =
-    document.getElementById(
-        "qrName"
-    );
-
+    document.getElementById("qrName");
 
 
 /* =====================================================
-   HELPERS
+   MEMBER SCREEN ELEMENTS
 ===================================================== */
 
+const memberScreenElements =
+    Array.from(
+        document.querySelectorAll(
+            ".app > :not(#registrationScreen)"
+        )
+    );
 
-function normalizePhone(value) {
 
-    return value.replace(
-        /[^0-9]/g,
-        ""
+/* =====================================================
+   SCREEN CONTROL
+===================================================== */
+
+function showRegistrationScreen() {
+
+    registrationScreen.style.display = "flex";
+
+    memberScreenElements.forEach(
+        function(element) {
+            element.style.display = "none";
+        }
     );
 
 }
 
 
+function showMemberScreen() {
 
-function showRegistration() {
+    registrationScreen.style.display = "none";
 
-    registrationScreen
-        .classList
-        .remove(
-            "hidden"
-        );
-
-
-    memberScreen
-        .classList
-        .add(
-            "hidden"
-        );
+    memberScreenElements.forEach(
+        function(element) {
+            element.style.display = "";
+        }
+    );
 
 }
-
-
-
-function showDashboard() {
-
-    registrationScreen
-        .classList
-        .add(
-            "hidden"
-        );
-
-
-    memberScreen
-        .classList
-        .remove(
-            "hidden"
-        );
-
-}
-
 
 
 /* =====================================================
-   STAMPS
+   CREATE STAMP CIRCLES
 ===================================================== */
-
 
 function renderStamps(count) {
 
+    stamps.innerHTML = "";
 
-    stamps.innerHTML =
-        "";
-
-
-    for (
-        let i = 1;
-        i <= 10;
-        i++
-    ) {
-
+    for (let i = 1; i <= 10; i++) {
 
         const stamp =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
+        stamp.className = "stamp";
 
-        stamp.className =
-            "stamp";
-
-
-        if (
-            i <= count
-        ) {
-
-            stamp
-                .classList
-                .add(
-                    "active"
-                );
-
+        if (i <= count) {
+            stamp.classList.add("active");
         }
 
-
-        stamps.appendChild(
-            stamp
-        );
+        stamps.appendChild(stamp);
 
     }
 
 }
-
-
-
-/* =====================================================
-   REWARD
-===================================================== */
-
-
-function updateReward(count) {
-
-
-    const required =
-        10;
-
-
-    if (
-        count >= required
-    ) {
-
-
-        rewardName.textContent =
-            "FREE COFFEE";
-
-
-        rewardStatus.textContent =
-            "REWARD UNLOCKED";
-
-
-        return;
-
-    }
-
-
-    const remaining =
-        required -
-        count;
-
-
-    rewardName.textContent =
-        "FREE COFFEE";
-
-
-    rewardStatus.textContent =
-        "COLLECT " +
-        remaining +
-        " MORE STAMP" +
-        (
-            remaining === 1
-                ? ""
-                : "S"
-        ) +
-        " TO UNLOCK";
-
-}
-
 
 
 /* =====================================================
    LOAD MEMBER
 ===================================================== */
 
-
 async function loadMember() {
 
+    if (!MEMBER_ID) {
+        return false;
+    }
 
     const {
         data,
         error
-    } =
-        await supabaseClient
-
-            .from(
-                "members"
-            )
-
-            .select(
-                "id,name"
-            )
-
-            .eq(
-                "id",
-                currentMemberId
-            )
-
-            .maybeSingle();
+    } = await supabaseClient
+        .from("members")
+        .select("id, name, phone")
+        .eq("id", MEMBER_ID)
+        .maybeSingle();
 
 
-
-    if (
-        error ||
-        !data
-    ) {
-
+    if (error) {
 
         console.error(
-            "MEMBER LOAD ERROR:",
+            "LOAD MEMBER ERROR:",
             error
         );
-
 
         return false;
 
     }
 
+
+    if (!data) {
+
+        console.warn(
+            "MEMBER NOT FOUND:",
+            MEMBER_ID
+        );
+
+        return false;
+
+    }
 
 
     const name =
@@ -1634,23 +1472,22 @@ async function loadMember() {
         "MEMBER";
 
 
-    memberName
-        .classList
-        .remove(
-            "loading"
-        );
-
+    memberName.classList.remove(
+        "loading"
+    );
 
     memberName.textContent =
-        String(
-            name
-        ).toUpperCase();
+        String(name).toUpperCase();
 
 
     qrName.textContent =
-        String(
-            name
-        ).toUpperCase();
+        String(name).toUpperCase();
+
+
+    console.log(
+        "ACTIVE MEMBER:",
+        data
+    );
 
 
     return true;
@@ -1658,78 +1495,63 @@ async function loadMember() {
 }
 
 
-
 /* =====================================================
    LOAD STAMPS
 ===================================================== */
 
-
 async function loadStamps() {
 
+    if (!MEMBER_ID) {
 
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+        stampNumber.textContent = "0";
 
-            .from(
-                "stamps"
-            )
+        renderStamps(0);
 
-            .select(
-                "stamps"
-            )
-
-            .eq(
-                "member_id",
-                currentMemberId
-            )
-
-            .eq(
-                "outlet_id",
-                OUTLET_ID
-            )
-
-            .maybeSingle();
-
-
-
-    if (
-        error
-    ) {
-
-
-        console.error(
-            "STAMP LOAD ERROR:",
-            error
-        );
-
-
-        stampNumber.textContent =
-            "0";
-
-
-        renderStamps(
-            0
-        );
-
-
-        updateReward(
-            0
-        );
-
+        updateReward(0);
 
         return;
 
     }
 
 
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("stamps")
+        .select("stamps")
+        .eq(
+            "member_id",
+            MEMBER_ID
+        )
+        .eq(
+            "outlet_id",
+            OUTLET_ID
+        )
+        .maybeSingle();
+
+
+    if (error) {
+
+        console.error(
+            "LOAD STAMPS ERROR:",
+            error
+        );
+
+        stampNumber.textContent = "0";
+
+        renderStamps(0);
+
+        updateReward(0);
+
+        return;
+
+    }
+
 
     const count =
         Number(
-            data?.stamps ||
-            0
+            data?.stamps || 0
         );
 
 
@@ -1738,294 +1560,75 @@ async function loadStamps() {
 
 
     renderStamps(
-
-        Math.min(
-            count,
-            10
-        )
-
+        Math.min(count, 10)
     );
 
 
-    updateReward(
-        count
-    );
+    updateReward(count);
 
 }
 
 
-
 /* =====================================================
-   OPEN MEMBER SCREEN
+   REWARD
 ===================================================== */
 
+function updateReward(count) {
 
-async function openMemberScreen() {
-
-
-    showDashboard();
+    const required = 10;
 
 
-    memberName.textContent =
-        "LOADING";
+    if (count >= required) {
 
+        rewardName.textContent =
+            "FREE COFFEE";
 
-    memberName
-        .classList
-        .add(
-            "loading"
-        );
+        rewardStatus.textContent =
+            "REWARD UNLOCKED";
 
+    } else {
 
-    const memberExists =
-        await loadMember();
+        const remaining =
+            required - count;
 
+        rewardName.textContent =
+            "FREE COFFEE";
 
-    if (
-        !memberExists
-    ) {
-
-
-        localStorage.removeItem(
-            STORAGE_KEY
-        );
-
-
-        currentMemberId =
-            null;
-
-
-        showRegistration();
-
-
-        return;
+        rewardStatus.textContent =
+            "COLLECT " +
+            remaining +
+            " MORE STAMP" +
+            (
+                remaining === 1
+                    ? ""
+                    : "S"
+            ) +
+            " TO UNLOCK";
 
     }
-
-
-    await loadStamps();
 
 }
-
-
-
-/* =====================================================
-   REGISTRATION
-===================================================== */
-
-
-async function registerMember() {
-
-
-    const name =
-        registerName
-            .value
-            .trim();
-
-
-    const phone =
-        normalizePhone(
-            registerPhone.value
-        );
-
-
-
-    if (
-        !name ||
-        !phone
-    ) {
-
-
-        registerStatus.textContent =
-            "PLEASE COMPLETE YOUR DETAILS.";
-
-
-        return;
-
-    }
-
-
-
-    if (
-        phone.length < 9
-    ) {
-
-
-        registerStatus.textContent =
-            "PLEASE ENTER A VALID WHATSAPP NUMBER.";
-
-
-        return;
-
-    }
-
-
-
-    registerButton.disabled =
-        true;
-
-
-    registerButton.textContent =
-        "JOINING...";
-
-
-    registerStatus.textContent =
-        "";
-
-
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
-
-            .from(
-                "members"
-            )
-
-            .insert([
-                {
-
-                    name:
-                        name,
-
-                    phone:
-                        phone
-
-                }
-            ])
-
-            .select(
-                "id,name"
-            )
-
-            .single();
-
-
-
-    if (
-        error
-    ) {
-
-
-        console.error(
-            "REGISTER ERROR:",
-            error
-        );
-
-
-        registerButton.disabled =
-            false;
-
-
-        registerButton.textContent =
-            "JOIN THE CLUB";
-
-
-        registerStatus.textContent =
-            "SORRY. SOMETHING WENT WRONG.";
-
-
-        return;
-
-    }
-
-
-
-    currentMemberId =
-        data.id;
-
-
-
-    localStorage.setItem(
-
-        STORAGE_KEY,
-
-        String(
-            currentMemberId
-        )
-
-    );
-
-
-
-    registerStatus.textContent =
-        "WELCOME TO VYNÉ CLUB.";
-
-
-    registerButton.textContent =
-        "YOU'RE IN";
-
-
-
-    setTimeout(
-
-        function () {
-
-            openMemberScreen();
-
-        },
-
-        500
-
-    );
-
-}
-
-
-
-/* =====================================================
-   REGISTRATION EVENT
-===================================================== */
-
-
-registerButton
-    .addEventListener(
-
-        "click",
-
-        registerMember
-
-    );
-
 
 
 /* =====================================================
    QR
 ===================================================== */
 
-
 function openQr() {
 
-
-    if (
-        !currentMemberId
-    ) {
-
+    if (!MEMBER_ID) {
         return;
-
     }
 
 
     const qrData =
         encodeURIComponent(
-
             JSON.stringify({
-
-                type:
-                    "vyne-club",
-
-                member_id:
-                    currentMemberId,
-
-                outlet_id:
-                    OUTLET_ID
-
+                type: "vyne-club",
+                member_id: MEMBER_ID,
+                outlet_id: OUTLET_ID
             })
-
         );
-
 
 
     qrImage.src =
@@ -2033,89 +1636,250 @@ function openQr() {
         qrData;
 
 
-    qrModal
-        .classList
-        .add(
-            "show"
-        );
+    qrModal.classList.add(
+        "show"
+    );
 
 }
-
 
 
 function closeQrModal() {
 
-
-    qrModal
-        .classList
-        .remove(
-            "show"
-        );
+    qrModal.classList.remove(
+        "show"
+    );
 
 }
 
 
+if (qrButton) {
 
-qrButton
-    .addEventListener(
-
+    qrButton.addEventListener(
         "click",
-
         openQr
-
     );
 
+}
 
 
-closeQr
-    .addEventListener(
+if (closeQr) {
 
+    closeQr.addEventListener(
         "click",
-
         closeQrModal
-
     );
 
+}
 
 
-qrModal
-    .addEventListener(
+if (qrModal) {
 
+    qrModal.addEventListener(
         "click",
-
-        function (
-            event
-        ) {
-
+        function(event) {
 
             if (
                 event.target ===
                 qrModal
             ) {
 
-
                 closeQrModal();
 
             }
 
         }
-
     );
 
+}
+
+
+/* =====================================================
+   REGISTRATION
+===================================================== */
+
+if (registerButton) {
+
+    registerButton.addEventListener(
+        "click",
+        async function () {
+
+
+            const name =
+                registerName.value.trim();
+
+
+            const phone =
+                registerPhone.value
+                    .trim()
+                    .replace(/\s+/g, "");
+
+
+            /* =========================
+               VALIDATION
+            ========================= */
+
+            if (!name || !phone) {
+
+                registerStatus.textContent =
+                    "PLEASE COMPLETE YOUR DETAILS.";
+
+                return;
+
+            }
+
+
+            if (
+                phone.length < 9
+            ) {
+
+                registerStatus.textContent =
+                    "PLEASE CHECK YOUR WHATSAPP NUMBER.";
+
+                return;
+
+            }
+
+
+            /* =========================
+               LOADING
+            ========================= */
+
+            registerButton.disabled =
+                true;
+
+            registerButton.textContent =
+                "JOINING...";
+
+            registerStatus.textContent =
+                "";
+
+
+            /* =========================
+               CREATE MEMBER
+            ========================= */
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("members")
+                .insert([
+                    {
+                        name: name,
+                        phone: phone
+                    }
+                ])
+                .select(
+                    "id, name, phone"
+                )
+                .single();
+
+
+            /* =========================
+               ERROR
+            ========================= */
+
+            if (error) {
+
+                console.error(
+                    "REGISTRATION ERROR:",
+                    error
+                );
+
+
+                registerButton.disabled =
+                    false;
+
+
+                registerButton.textContent =
+                    "JOIN THE CLUB";
+
+
+                registerStatus.textContent =
+                    "SORRY. SOMETHING WENT WRONG.";
+
+
+                return;
+
+            }
+
+
+            /* =========================
+               SAVE MEMBER ID
+            ========================= */
+
+            MEMBER_ID =
+                Number(data.id);
+
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                String(MEMBER_ID)
+            );
+
+
+            console.log(
+                "MEMBER CREATED:",
+                data
+            );
+
+
+            console.log(
+                "MEMBER ID SAVED:",
+                MEMBER_ID
+            );
+
+
+            /* =========================
+               SHOW MEMBER CARD
+            ========================= */
+
+            memberName.classList.remove(
+                "loading"
+            );
+
+
+            memberName.textContent =
+                String(
+                    data.name
+                ).toUpperCase();
+
+
+            qrName.textContent =
+                String(
+                    data.name
+                ).toUpperCase();
+
+
+            stampNumber.textContent =
+                "0";
+
+
+            renderStamps(0);
+
+
+            updateReward(0);
+
+
+            showMemberScreen();
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "instant"
+            });
+
+        }
+    );
+
+}
 
 
 /* =====================================================
    INIT
 ===================================================== */
 
-
 async function init() {
-
-
-    renderStamps(
-        0
-    );
-
 
     const savedMemberId =
         localStorage.getItem(
@@ -2123,55 +1887,65 @@ async function init() {
         );
 
 
+    /* =========================
+       EXISTING MEMBER
+    ========================= */
 
-    if (
-        !savedMemberId
-    ) {
+    if (savedMemberId) {
 
-
-        showRegistration();
-
-
-        return;
-
-    }
+        MEMBER_ID =
+            Number(savedMemberId);
 
 
+        if (
+            MEMBER_ID &&
+            Number.isFinite(MEMBER_ID)
+        ) {
 
-    currentMemberId =
-        Number(
-            savedMemberId
-        );
+            showMemberScreen();
 
 
+            const memberExists =
+                await loadMember();
 
-    if (
-        !currentMemberId
-    ) {
 
+            if (memberExists) {
+
+                await loadStamps();
+
+                return;
+
+            }
+
+        }
+
+
+        /* INVALID SAVED MEMBER */
 
         localStorage.removeItem(
             STORAGE_KEY
         );
 
 
-        showRegistration();
-
-
-        return;
+        MEMBER_ID = null;
 
     }
 
 
+    /* =========================
+       NEW MEMBER
+    ========================= */
 
-    await openMemberScreen();
+    showRegistrationScreen();
+
+    renderStamps(0);
+
+    updateReward(0);
 
 }
 
 
-
 init();
-
 
 </script>
 
