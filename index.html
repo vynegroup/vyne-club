@@ -1556,6 +1556,8 @@ if (registerButton) {
 
                 await loadActivity();
 
+                subscribeToStampUpdates();
+
                 loadRewardPlaceholder();
 
                 showMemberScreen();
@@ -1666,7 +1668,47 @@ if (registerButton) {
     );
 
 }
+/* =====================================================
+   REALTIME STAMP UPDATES
+===================================================== */
 
+function subscribeToStampUpdates() {
+
+    if (!MEMBER_ID) {
+        return;
+    }
+
+    supabaseClient
+        .channel("member-stamps-" + MEMBER_ID)
+        .on(
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "public",
+                table: "stamps",
+                filter: "member_id=eq." + MEMBER_ID
+            },
+            async function(payload) {
+
+                console.log(
+                    "STAMP UPDATE:",
+                    payload
+                );
+
+                await loadActivity();
+
+            }
+        )
+        .subscribe(function(status) {
+
+            console.log(
+                "REALTIME STATUS:",
+                status
+            );
+
+        });
+
+    }
 /* =====================================================
    INIT
 ===================================================== */
@@ -1702,6 +1744,8 @@ async function init() {
             ) {
 
                 await loadActivity();
+
+                subscribeToStampUpdates();
 
                 loadRewardPlaceholder();
 
