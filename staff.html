@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-
 <meta charset="UTF-8">
 
 <meta
@@ -21,7 +20,6 @@
 >
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
@@ -29,8 +27,8 @@
 :root {
     --black: #080808;
     --cream: #f2eee5;
-    --line: rgba(242,238,229,.35);
-    --muted: rgba(242,238,229,.6);
+    --line: rgba(242, 238, 229, .35);
+    --muted: rgba(242, 238, 229, .58);
     --danger: #ff8f8f;
 }
 
@@ -42,15 +40,14 @@
 
 html,
 body {
+    width: 100%;
     min-height: 100%;
+    background: var(--black);
 }
 
 body {
-    background: var(--black);
     color: var(--cream);
     font-family: "Space Mono", monospace;
-    display: flex;
-    justify-content: center;
 }
 
 button,
@@ -58,28 +55,36 @@ input {
     font: inherit;
 }
 
-.app {
-    width: 100%;
-    max-width: 430px;
-    min-height: 100vh;
-    padding: 42px 30px;
+button {
+    cursor: pointer;
 }
 
 .hidden {
     display: none !important;
 }
 
-.small-label {
-    font-size: 10px;
-    letter-spacing: .3em;
-    color: var(--muted);
+
+/* =====================================================
+   APP
+===================================================== */
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 42px 30px 48px;
 }
 
-.big-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 64px;
-    line-height: .9;
-    margin-top: 22px;
+
+/* =====================================================
+   COMMON
+===================================================== */
+
+.small-label {
+    font-size: 10px;
+    letter-spacing: .32em;
+    color: var(--muted);
 }
 
 .status {
@@ -96,135 +101,162 @@ input {
 }
 
 
-/* =========================
+/* =====================================================
    LOGIN
-========================= */
+===================================================== */
 
 .login-screen {
-    padding-top: 40px;
+    min-height: calc(100vh - 90px);
+    padding-top: 35px;
+}
+
+.login-title {
+    margin-top: 48px;
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 76px;
+    line-height: .88;
+    letter-spacing: .01em;
 }
 
 .login-copy {
-    margin-top: 28px;
+    margin-top: 42px;
     font-size: 12px;
     line-height: 1.8;
     color: var(--muted);
 }
 
-.form {
-    margin-top: 60px;
-    display: flex;
-    flex-direction: column;
+.login-form {
+    margin-top: 72px;
 }
 
-.form label {
+.login-form label {
+    display: block;
+    margin-bottom: 12px;
     font-size: 10px;
-    letter-spacing: .25em;
+    letter-spacing: .3em;
     color: var(--muted);
-    margin-bottom: 10px;
 }
 
-.form input {
+.login-form input {
+    width: 100%;
+    margin-bottom: 36px;
+    padding: 14px 0;
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--line);
-    color: var(--cream);
-    padding: 12px 0;
-    margin-bottom: 30px;
-    outline: none;
     border-radius: 0;
+    color: var(--cream);
+    font-size: 15px;
+    outline: none;
 }
 
-.primary-button {
+.login-form input:focus {
+    border-bottom-color: var(--cream);
+}
+
+.login-button {
     width: 100%;
+    margin-top: 20px;
+    padding: 20px;
     border: none;
     background: var(--cream);
     color: var(--black);
-    padding: 18px;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .2em;
-    cursor: pointer;
+    letter-spacing: .25em;
 }
 
-.primary-button:disabled {
+.login-button:disabled {
     opacity: .5;
 }
 
 
-/* =========================
+/* =====================================================
    DASHBOARD
-========================= */
+===================================================== */
+
+.dashboard-screen {
+    width: 100%;
+}
 
 .staff-header {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
 }
 
 .staff-name {
+    margin-top: 8px;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 28px;
+    font-size: 34px;
+    line-height: 1;
 }
 
 .logout-button {
-    border: 1px solid var(--line);
+    padding: 12px 14px;
     background: transparent;
+    border: 1px solid var(--line);
     color: var(--cream);
-    padding: 10px 12px;
     font-size: 9px;
-    letter-spacing: .15em;
-}
-
-.scan-box {
-    margin-top: 50px;
-}
-
-.scan-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 48px;
-    line-height: .95;
-}
-
-.scan-copy {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.7;
-}
-
-.camera-button {
-    width: 100%;
-    margin-top: 30px;
-    background: var(--cream);
-    color: var(--black);
-    border: none;
-    padding: 18px;
-    font-size: 11px;
-    font-weight: 700;
     letter-spacing: .2em;
 }
 
-.stop-camera-button {
-    width: 100%;
-    margin-top: 12px;
-    background: transparent;
-    color: var(--cream);
-    border: 1px solid var(--line);
-    padding: 16px;
-    font-size: 10px;
-    letter-spacing: .18em;
+.checkin {
+    margin-top: 76px;
+}
+
+.checkin-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 72px;
+    line-height: .86;
+}
+
+.checkin-copy {
+    max-width: 320px;
+    margin-top: 28px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.8;
 }
 
 
-/* =========================
+/* =====================================================
    CAMERA
-========================= */
+===================================================== */
 
-.camera-wrap {
+.open-camera-button {
+    width: 100%;
+    margin-top: 38px;
+    padding: 20px;
+    border: none;
+    background: var(--cream);
+    color: var(--black);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .24em;
+}
+
+.open-camera-button:disabled {
+    opacity: .5;
+}
+
+.close-camera-button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 17px;
+    border: 1px solid var(--cream);
+    background: transparent;
+    color: var(--cream);
+    font-size: 10px;
+    letter-spacing: .22em;
+}
+
+.camera-container {
+    width: 100%;
     margin-top: 24px;
-    border: 1px solid var(--line);
     padding: 8px;
+    border: 1px solid var(--line);
+    overflow: hidden;
 }
 
 #qrReader {
@@ -232,59 +264,62 @@ input {
     overflow: hidden;
 }
 
-#qrReader video {
+#qrReader video,
+#qrReader canvas {
     width: 100% !important;
-    border-radius: 0 !important;
+    max-width: 100% !important;
 }
 
 
-/* =========================
-   FALLBACK
-========================= */
+/* =====================================================
+   MANUAL FALLBACK
+===================================================== */
 
 .manual-section {
-    margin-top: 32px;
-    padding-top: 26px;
+    margin-top: 46px;
+    padding-top: 30px;
     border-top: 1px solid var(--line);
 }
 
 .manual-label {
     font-size: 9px;
-    letter-spacing: .25em;
+    line-height: 1.6;
+    letter-spacing: .26em;
     color: var(--muted);
 }
 
 .qr-input {
     width: 100%;
-    margin-top: 18px;
+    margin-top: 24px;
+    padding: 14px 0;
     background: transparent;
     border: none;
     border-bottom: 1px solid var(--line);
+    border-radius: 0;
     color: var(--cream);
-    padding: 14px 0;
     outline: none;
 }
 
-.lookup-button {
+.find-button {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 22px;
+    padding: 18px;
     background: transparent;
     border: 1px solid var(--cream);
     color: var(--cream);
-    padding: 17px;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: .2em;
+    letter-spacing: .22em;
 }
 
 
-/* =========================
+/* =====================================================
    MEMBER RESULT
-========================= */
+===================================================== */
 
 .member-card {
-    margin-top: 46px;
-    padding-top: 28px;
+    margin-top: 56px;
+    padding-top: 34px;
     border-top: 1px solid var(--line);
 }
 
@@ -294,46 +329,69 @@ input {
     color: var(--muted);
 }
 
-.member-name {
+.customer-name {
+    margin-top: 16px;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 58px;
-    margin-top: 14px;
+    font-size: 64px;
+    line-height: .9;
 }
 
-.member-phone {
-    margin-top: 6px;
+.customer-phone {
+    margin-top: 12px;
     font-size: 11px;
     color: var(--muted);
 }
 
 .stamp-count {
+    margin-top: 44px;
     font-family: "Bebas Neue", sans-serif;
-    font-size: 110px;
-    line-height: .8;
-    margin-top: 34px;
+    font-size: 130px;
+    line-height: .72;
 }
 
 .stamp-caption {
+    margin-top: 28px;
     font-size: 10px;
     letter-spacing: .3em;
     color: var(--muted);
-    margin-top: 20px;
 }
 
 .add-stamp-button {
     width: 100%;
-    margin-top: 40px;
-    padding: 20px;
+    margin-top: 44px;
+    padding: 21px;
     border: none;
     background: var(--cream);
     color: var(--black);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: .2em;
+    letter-spacing: .24em;
 }
 
 .add-stamp-button:disabled {
     opacity: .5;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 360px) {
+
+    .app {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .login-title {
+        font-size: 68px;
+    }
+
+    .checkin-title {
+        font-size: 64px;
+    }
+
 }
 
 </style>
@@ -345,17 +403,20 @@ input {
 <main class="app">
 
 
-<!-- =========================
-     LOGIN
-========================= -->
+<!-- =====================================================
+     LOGIN SCREEN
+===================================================== -->
 
-<section id="loginScreen" class="login-screen">
+<section
+    id="loginScreen"
+    class="login-screen"
+>
 
     <div class="small-label">
         VYNÉ CLUB / STAFF
     </div>
 
-    <div class="big-title">
+    <div class="login-title">
         STAFF<br>
         ACCESS.
     </div>
@@ -365,7 +426,7 @@ input {
         Very serious loyalty business.
     </div>
 
-    <div class="form">
+    <div class="login-form">
 
         <label for="emailInput">
             EMAIL
@@ -389,7 +450,7 @@ input {
 
         <button
             id="loginButton"
-            class="primary-button"
+            class="login-button"
             type="button"
         >
             LOGIN
@@ -405,16 +466,17 @@ input {
 </section>
 
 
-<!-- =========================
-     DASHBOARD
-========================= -->
+
+<!-- =====================================================
+     DASHBOARD SCREEN
+===================================================== -->
 
 <section
     id="dashboardScreen"
-    class="hidden"
+    class="dashboard-screen hidden"
 >
 
-    <div class="staff-header">
+    <header class="staff-header">
 
         <div>
 
@@ -439,50 +501,54 @@ input {
             LOGOUT
         </button>
 
-    </div>
+    </header>
 
 
-    <div class="scan-box">
+    <section class="checkin">
 
-        <div class="scan-title">
+        <div class="checkin-title">
             MEMBER<br>
             CHECK-IN.
         </div>
 
-        <div class="scan-copy">
+        <div class="checkin-copy">
             Open camera and scan the member's Vyné QR.
         </div>
 
+
         <button
             id="openCameraButton"
-            class="camera-button"
+            class="open-camera-button"
             type="button"
         >
             OPEN CAMERA
         </button>
 
+
         <button
-            id="stopCameraButton"
-            class="stop-camera-button hidden"
+            id="closeCameraButton"
+            class="close-camera-button hidden"
             type="button"
         >
             CLOSE CAMERA
         </button>
 
+
         <div
-            id="cameraWrap"
-            class="camera-wrap hidden"
+            id="cameraContainer"
+            class="camera-container hidden"
         >
-
             <div id="qrReader"></div>
-
         </div>
+
 
         <div
             id="cameraStatus"
             class="status"
         ></div>
 
+
+        <!-- MANUAL FALLBACK -->
 
         <div class="manual-section">
 
@@ -498,8 +564,8 @@ input {
             >
 
             <button
-                id="lookupButton"
-                class="lookup-button"
+                id="findMemberButton"
+                class="find-button"
                 type="button"
             >
                 FIND MEMBER
@@ -512,8 +578,10 @@ input {
 
         </div>
 
-    </div>
+    </section>
 
+
+    <!-- MEMBER CARD -->
 
     <section
         id="memberCard"
@@ -526,17 +594,18 @@ input {
 
         <div
             id="customerName"
-            class="member-name"
+            class="customer-name"
         >
             —
         </div>
 
         <div
             id="customerPhone"
-            class="member-phone"
+            class="customer-phone"
         >
             —
         </div>
+
 
         <div
             id="customerStampCount"
@@ -549,6 +618,7 @@ input {
             CURRENT STAMPS
         </div>
 
+
         <button
             id="addStampButton"
             class="add-stamp-button"
@@ -557,12 +627,14 @@ input {
             + ADD STAMP
         </button>
 
+
         <div
             id="stampStatus"
             class="status"
         ></div>
 
     </section>
+
 
 </section>
 
@@ -594,9 +666,11 @@ const supabaseClient =
 
 let ACTIVE_MEMBER_ID = null;
 
-let html5QrCode = null;
+let qrScanner = null;
 
 let CAMERA_RUNNING = false;
+
+let SCAN_LOCKED = false;
 
 
 /* =====================================================
@@ -630,11 +704,11 @@ const logoutButton =
 const openCameraButton =
     document.getElementById("openCameraButton");
 
-const stopCameraButton =
-    document.getElementById("stopCameraButton");
+const closeCameraButton =
+    document.getElementById("closeCameraButton");
 
-const cameraWrap =
-    document.getElementById("cameraWrap");
+const cameraContainer =
+    document.getElementById("cameraContainer");
 
 const cameraStatus =
     document.getElementById("cameraStatus");
@@ -642,8 +716,8 @@ const cameraStatus =
 const qrInput =
     document.getElementById("qrInput");
 
-const lookupButton =
-    document.getElementById("lookupButton");
+const findMemberButton =
+    document.getElementById("findMemberButton");
 
 const lookupStatus =
     document.getElementById("lookupStatus");
@@ -668,44 +742,57 @@ const stampStatus =
 
 
 /* =====================================================
-   SCREEN
+   SCREEN CONTROL
 ===================================================== */
 
 function showLogin() {
 
-    loginScreen.classList.remove("hidden");
+    loginScreen.classList.remove(
+        "hidden"
+    );
 
-    dashboardScreen.classList.add("hidden");
+    dashboardScreen.classList.add(
+        "hidden"
+    );
 
 }
 
 
 function showDashboard() {
 
-    loginScreen.classList.add("hidden");
+    loginScreen.classList.add(
+        "hidden"
+    );
 
-    dashboardScreen.classList.remove("hidden");
+    dashboardScreen.classList.remove(
+        "hidden"
+    );
 
 }
 
 
 /* =====================================================
-   STAFF
+   STAFF PROFILE
 ===================================================== */
 
 async function loadStaff() {
 
     const {
-        data: userData,
-        error: userError
+        data: authData,
+        error: authError
     } =
         await supabaseClient.auth.getUser();
 
 
     if (
-        userError ||
-        !userData?.user
+        authError ||
+        !authData?.user
     ) {
+
+        console.error(
+            "AUTH USER ERROR:",
+            authError
+        );
 
         return false;
 
@@ -723,7 +810,7 @@ async function loadStaff() {
             )
             .eq(
                 "user_id",
-                userData.user.id
+                authData.user.id
             )
             .maybeSingle();
 
@@ -734,11 +821,9 @@ async function loadStaff() {
     ) {
 
         console.error(
-            "STAFF LOAD ERROR:",
+            "STAFF PROFILE ERROR:",
             error
         );
-
-        await supabaseClient.auth.signOut();
 
         return false;
 
@@ -747,7 +832,8 @@ async function loadStaff() {
 
     staffName.textContent =
         String(
-            data.name
+            data.name ||
+            "STAFF"
         ).toUpperCase();
 
 
@@ -799,8 +885,8 @@ loginButton.addEventListener(
             await supabaseClient
                 .auth
                 .signInWithPassword({
-                    email,
-                    password
+                    email: email,
+                    password: password
                 });
 
 
@@ -811,41 +897,60 @@ loginButton.addEventListener(
                 error
             );
 
-            loginButton.disabled = false;
+            loginStatus.textContent =
+                "LOGIN FAILED.";
+
+            loginButton.disabled =
+                false;
 
             loginButton.textContent =
                 "LOGIN";
-
-            loginStatus.textContent =
-                "LOGIN FAILED.";
 
             return;
 
         }
 
 
-        const staffValid =
+        const authorized =
             await loadStaff();
 
 
-        if (!staffValid) {
+        if (!authorized) {
 
-            loginButton.disabled = false;
+            await supabaseClient
+                .auth
+                .signOut();
 
-            loginButton.textContent =
-                "LOGIN";
 
             loginStatus.textContent =
                 "NOT AUTHORIZED AS STAFF.";
 
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "LOGIN";
+
             return;
 
         }
 
 
+        loginStatus.textContent =
+            "";
+
+
         showDashboard();
 
-        loginButton.disabled = false;
+
+        window.scrollTo(
+            0,
+            0
+        );
+
+
+        loginButton.disabled =
+            false;
 
         loginButton.textContent =
             "LOGIN";
@@ -872,25 +977,36 @@ logoutButton.addEventListener(
             "hidden"
         );
 
+        emailInput.value = "";
+
+        passwordInput.value = "";
+
         showLogin();
+
+        window.scrollTo(
+            0,
+            0
+        );
 
     }
 );
 
 
 /* =====================================================
-   PARSE QR
+   QR PARSER
 ===================================================== */
 
-function parseQrData(raw) {
+function parseQrData(rawText) {
 
-    let text =
-        raw.trim();
-
-
-    if (!text) {
+    if (!rawText) {
         return null;
     }
+
+
+    let text =
+        String(
+            rawText
+        ).trim();
 
 
     try {
@@ -900,17 +1016,21 @@ function parseQrData(raw) {
                 text
             );
 
-    } catch (e) {}
+    } catch (error) {
+        /* already decoded */
+    }
 
 
     try {
 
-        const parsed =
-            JSON.parse(text);
+        const data =
+            JSON.parse(
+                text
+            );
 
 
         if (
-            parsed.type !==
+            data.type !==
             "vyne-club"
         ) {
 
@@ -921,15 +1041,15 @@ function parseQrData(raw) {
 
         const memberId =
             Number(
-                parsed.member_id
+                data.member_id
             );
 
 
         if (
-            !memberId ||
             !Number.isFinite(
                 memberId
-            )
+            ) ||
+            memberId <= 0
         ) {
 
             return null;
@@ -943,7 +1063,7 @@ function parseQrData(raw) {
         };
 
 
-    } catch (e) {
+    } catch (error) {
 
         return null;
 
@@ -998,7 +1118,7 @@ async function loadCustomer(
         lookupStatus.textContent =
             "MEMBER NOT FOUND.";
 
-        return;
+        return false;
 
     }
 
@@ -1030,17 +1150,21 @@ async function loadCustomer(
 
 
     ACTIVE_MEMBER_ID =
-        member.id;
+        Number(
+            member.id
+        );
 
 
     customerName.textContent =
         String(
-            member.name
+            member.name ||
+            "MEMBER"
         ).toUpperCase();
 
 
     customerPhone.textContent =
-        member.phone || "—";
+        member.phone ||
+        "—";
 
 
     customerStampCount.textContent =
@@ -1065,16 +1189,26 @@ async function loadCustomer(
     );
 
 
-    memberCard.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
+    setTimeout(
+        function () {
+
+            memberCard.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        },
+        100
+    );
+
+
+    return true;
 
 }
 
 
 /* =====================================================
-   CAMERA
+   CAMERA START
 ===================================================== */
 
 async function startCamera() {
@@ -1082,6 +1216,22 @@ async function startCamera() {
     if (CAMERA_RUNNING) {
         return;
     }
+
+
+    if (
+        typeof Html5Qrcode ===
+        "undefined"
+    ) {
+
+        cameraStatus.textContent =
+            "SCANNER LIBRARY FAILED TO LOAD.";
+
+        return;
+
+    }
+
+
+    SCAN_LOCKED = false;
 
 
     cameraStatus.textContent =
@@ -1092,25 +1242,25 @@ async function startCamera() {
         true;
 
 
-    cameraWrap.classList.remove(
+    cameraContainer.classList.remove(
         "hidden"
     );
 
 
-    stopCameraButton.classList.remove(
+    closeCameraButton.classList.remove(
         "hidden"
     );
 
 
     try {
 
-        html5QrCode =
+        qrScanner =
             new Html5Qrcode(
                 "qrReader"
             );
 
 
-        await html5QrCode.start(
+        await qrScanner.start(
 
             {
                 facingMode:
@@ -1121,16 +1271,19 @@ async function startCamera() {
                 fps: 10,
 
                 qrbox: {
-                    width: 240,
-                    height: 240
-                },
-
-                aspectRatio: 1
+                    width: 230,
+                    height: 230
+                }
             },
 
             async function (
                 decodedText
             ) {
+
+                if (SCAN_LOCKED) {
+                    return;
+                }
+
 
                 const parsed =
                     parseQrData(
@@ -1148,27 +1301,40 @@ async function startCamera() {
                 }
 
 
+                SCAN_LOCKED = true;
+
+
                 cameraStatus.textContent =
-                    "MEMBER FOUND.";
+                    "QR DETECTED.";
 
 
                 await stopCamera();
 
 
-                await loadCustomer(
-                    parsed.member_id
-                );
+                const found =
+                    await loadCustomer(
+                        parsed.member_id
+                    );
+
+
+                if (!found) {
+
+                    SCAN_LOCKED =
+                        false;
+
+                }
 
             },
 
             function () {
-                // normal scan misses ignored
+                /* scan misses are normal */
             }
 
         );
 
 
-        CAMERA_RUNNING = true;
+        CAMERA_RUNNING =
+            true;
 
 
         cameraStatus.textContent =
@@ -1178,87 +1344,95 @@ async function startCamera() {
     } catch (error) {
 
         console.error(
-            "CAMERA ERROR:",
+            "CAMERA START ERROR:",
             error
         );
 
 
-        CAMERA_RUNNING = false;
+        CAMERA_RUNNING =
+            false;
 
 
-        cameraStatus.textContent =
-            "CAMERA ACCESS FAILED.";
+        qrScanner =
+            null;
 
 
-        cameraWrap.classList.add(
+        cameraContainer.classList.add(
             "hidden"
         );
 
 
-        stopCameraButton.classList.add(
+        closeCameraButton.classList.add(
             "hidden"
         );
 
 
         openCameraButton.disabled =
             false;
+
+
+        cameraStatus.textContent =
+            "CAMERA ACCESS FAILED.";
 
     }
 
 }
 
 
+/* =====================================================
+   CAMERA STOP
+===================================================== */
+
 async function stopCamera() {
 
     if (
-        !html5QrCode ||
-        !CAMERA_RUNNING
+        qrScanner &&
+        CAMERA_RUNNING
     ) {
 
-        cameraWrap.classList.add(
-            "hidden"
-        );
+        try {
 
-        stopCameraButton.classList.add(
-            "hidden"
-        );
+            await qrScanner.stop();
 
-        openCameraButton.disabled =
-            false;
+        } catch (error) {
 
-        return;
+            console.warn(
+                "CAMERA STOP:",
+                error
+            );
 
-    }
-
-
-    try {
-
-        await html5QrCode.stop();
-
-        await html5QrCode.clear();
-
-    } catch (error) {
-
-        console.warn(
-            "STOP CAMERA ERROR:",
-            error
-        );
+        }
 
     }
 
 
-    CAMERA_RUNNING = false;
+    if (qrScanner) {
+
+        try {
+
+            qrScanner.clear();
+
+        } catch (error) {
+            /* ignore */
+        }
+
+    }
 
 
-    html5QrCode = null;
+    qrScanner =
+        null;
 
 
-    cameraWrap.classList.add(
+    CAMERA_RUNNING =
+        false;
+
+
+    cameraContainer.classList.add(
         "hidden"
     );
 
 
-    stopCameraButton.classList.add(
+    closeCameraButton.classList.add(
         "hidden"
     );
 
@@ -1279,17 +1453,24 @@ openCameraButton.addEventListener(
 );
 
 
-stopCameraButton.addEventListener(
+closeCameraButton.addEventListener(
     "click",
-    stopCamera
+    async function () {
+
+        await stopCamera();
+
+        cameraStatus.textContent =
+            "";
+
+    }
 );
 
 
 /* =====================================================
-   MANUAL LOOKUP
+   MANUAL QR
 ===================================================== */
 
-lookupButton.addEventListener(
+findMemberButton.addEventListener(
     "click",
     async function () {
 
@@ -1389,7 +1570,11 @@ addStampButton.addEventListener(
 
 
         customerStampCount.textContent =
-            String(data);
+            String(
+                Number(
+                    data
+                )
+            );
 
 
         stampStatus.textContent =
@@ -1413,1478 +1598,56 @@ addStampButton.addEventListener(
 
 async function init() {
 
-    const {
-        data
-    } =
-        await supabaseClient.auth.getSession();
-
-
-    if (
-        data?.session
-    ) {
-
-        const staffValid =
-            await loadStaff();
-
-
-        if (staffValid) {
-
-            showDashboard();
-
-            return;
-
-        }
-
-    }
-
-
-    showLogin();
-
-}
-
-
-init();
-
-</script>
-
-</body>
-
-    </html><!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>VYNÉ CLUB — STAFF</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap"
-    rel="stylesheet"
->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="https://unpkg.com/html5-qrcode"></script>
-
-<style>
-
-:root {
-    --black: #080808;
-    --cream: #f2eee5;
-    --line: rgba(242,238,229,.35);
-    --muted: rgba(242,238,229,.6);
-    --danger: #ff8f8f;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html,
-body {
-    min-height: 100%;
-}
-
-body {
-    background: var(--black);
-    color: var(--cream);
-    font-family: "Space Mono", monospace;
-    display: flex;
-    justify-content: center;
-}
-
-button,
-input {
-    font: inherit;
-}
-
-.app {
-    width: 100%;
-    max-width: 430px;
-    min-height: 100vh;
-    padding: 42px 30px;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.small-label {
-    font-size: 10px;
-    letter-spacing: .3em;
-    color: var(--muted);
-}
-
-.big-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 64px;
-    line-height: .9;
-    margin-top: 22px;
-}
-
-.status {
-    min-height: 18px;
-    margin-top: 16px;
-    font-size: 10px;
-    line-height: 1.6;
-    letter-spacing: .08em;
-    color: var(--muted);
-}
-
-.status.error {
-    color: var(--danger);
-}
-
-
-/* =========================
-   LOGIN
-========================= */
-
-.login-screen {
-    padding-top: 40px;
-}
-
-.login-copy {
-    margin-top: 28px;
-    font-size: 12px;
-    line-height: 1.8;
-    color: var(--muted);
-}
-
-.form {
-    margin-top: 60px;
-    display: flex;
-    flex-direction: column;
-}
-
-.form label {
-    font-size: 10px;
-    letter-spacing: .25em;
-    color: var(--muted);
-    margin-bottom: 10px;
-}
-
-.form input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    color: var(--cream);
-    padding: 12px 0;
-    margin-bottom: 30px;
-    outline: none;
-    border-radius: 0;
-}
-
-.primary-button {
-    width: 100%;
-    border: none;
-    background: var(--cream);
-    color: var(--black);
-    padding: 18px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .2em;
-    cursor: pointer;
-}
-
-.primary-button:disabled {
-    opacity: .5;
-}
-
-
-/* =========================
-   DASHBOARD
-========================= */
-
-.staff-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.staff-name {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 28px;
-}
-
-.logout-button {
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--cream);
-    padding: 10px 12px;
-    font-size: 9px;
-    letter-spacing: .15em;
-}
-
-.scan-box {
-    margin-top: 50px;
-}
-
-.scan-title {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 48px;
-    line-height: .95;
-}
-
-.scan-copy {
-    margin-top: 14px;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.7;
-}
-
-.camera-button {
-    width: 100%;
-    margin-top: 30px;
-    background: var(--cream);
-    color: var(--black);
-    border: none;
-    padding: 18px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .2em;
-}
-
-.stop-camera-button {
-    width: 100%;
-    margin-top: 12px;
-    background: transparent;
-    color: var(--cream);
-    border: 1px solid var(--line);
-    padding: 16px;
-    font-size: 10px;
-    letter-spacing: .18em;
-}
-
-
-/* =========================
-   CAMERA
-========================= */
-
-.camera-wrap {
-    margin-top: 24px;
-    border: 1px solid var(--line);
-    padding: 8px;
-}
-
-#qrReader {
-    width: 100%;
-    overflow: hidden;
-}
-
-#qrReader video {
-    width: 100% !important;
-    border-radius: 0 !important;
-}
-
-
-/* =========================
-   FALLBACK
-========================= */
-
-.manual-section {
-    margin-top: 32px;
-    padding-top: 26px;
-    border-top: 1px solid var(--line);
-}
-
-.manual-label {
-    font-size: 9px;
-    letter-spacing: .25em;
-    color: var(--muted);
-}
-
-.qr-input {
-    width: 100%;
-    margin-top: 18px;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--line);
-    color: var(--cream);
-    padding: 14px 0;
-    outline: none;
-}
-
-.lookup-button {
-    width: 100%;
-    margin-top: 20px;
-    background: transparent;
-    border: 1px solid var(--cream);
-    color: var(--cream);
-    padding: 17px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .2em;
-}
-
-
-/* =========================
-   MEMBER RESULT
-========================= */
-
-.member-card {
-    margin-top: 46px;
-    padding-top: 28px;
-    border-top: 1px solid var(--line);
-}
-
-.member-label {
-    font-size: 10px;
-    letter-spacing: .3em;
-    color: var(--muted);
-}
-
-.member-name {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 58px;
-    margin-top: 14px;
-}
-
-.member-phone {
-    margin-top: 6px;
-    font-size: 11px;
-    color: var(--muted);
-}
-
-.stamp-count {
-    font-family: "Bebas Neue", sans-serif;
-    font-size: 110px;
-    line-height: .8;
-    margin-top: 34px;
-}
-
-.stamp-caption {
-    font-size: 10px;
-    letter-spacing: .3em;
-    color: var(--muted);
-    margin-top: 20px;
-}
-
-.add-stamp-button {
-    width: 100%;
-    margin-top: 40px;
-    padding: 20px;
-    border: none;
-    background: var(--cream);
-    color: var(--black);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .2em;
-}
-
-.add-stamp-button:disabled {
-    opacity: .5;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<main class="app">
-
-
-<!-- =========================
-     LOGIN
-========================= -->
-
-<section id="loginScreen" class="login-screen">
-
-    <div class="small-label">
-        VYNÉ CLUB / STAFF
-    </div>
-
-    <div class="big-title">
-        STAFF<br>
-        ACCESS.
-    </div>
-
-    <div class="login-copy">
-        Authorized personnel only.<br>
-        Very serious loyalty business.
-    </div>
-
-    <div class="form">
-
-        <label for="emailInput">
-            EMAIL
-        </label>
-
-        <input
-            id="emailInput"
-            type="email"
-            autocomplete="email"
-        >
-
-        <label for="passwordInput">
-            PASSWORD
-        </label>
-
-        <input
-            id="passwordInput"
-            type="password"
-            autocomplete="current-password"
-        >
-
-        <button
-            id="loginButton"
-            class="primary-button"
-            type="button"
-        >
-            LOGIN
-        </button>
-
-        <div
-            id="loginStatus"
-            class="status"
-        ></div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================
-     DASHBOARD
-========================= -->
-
-<section
-    id="dashboardScreen"
-    class="hidden"
->
-
-    <div class="staff-header">
-
-        <div>
-
-            <div class="small-label">
-                VYNÉ CLUB / STAFF
-            </div>
-
-            <div
-                id="staffName"
-                class="staff-name"
-            >
-                STAFF
-            </div>
-
-        </div>
-
-        <button
-            id="logoutButton"
-            class="logout-button"
-            type="button"
-        >
-            LOGOUT
-        </button>
-
-    </div>
-
-
-    <div class="scan-box">
-
-        <div class="scan-title">
-            MEMBER<br>
-            CHECK-IN.
-        </div>
-
-        <div class="scan-copy">
-            Open camera and scan the member's Vyné QR.
-        </div>
-
-        <button
-            id="openCameraButton"
-            class="camera-button"
-            type="button"
-        >
-            OPEN CAMERA
-        </button>
-
-        <button
-            id="stopCameraButton"
-            class="stop-camera-button hidden"
-            type="button"
-        >
-            CLOSE CAMERA
-        </button>
-
-        <div
-            id="cameraWrap"
-            class="camera-wrap hidden"
-        >
-
-            <div id="qrReader"></div>
-
-        </div>
-
-        <div
-            id="cameraStatus"
-            class="status"
-        ></div>
-
-
-        <div class="manual-section">
-
-            <div class="manual-label">
-                CAMERA BEING DIFFICULT?
-            </div>
-
-            <input
-                id="qrInput"
-                class="qr-input"
-                type="text"
-                placeholder="PASTE QR DATA"
-            >
-
-            <button
-                id="lookupButton"
-                class="lookup-button"
-                type="button"
-            >
-                FIND MEMBER
-            </button>
-
-            <div
-                id="lookupStatus"
-                class="status"
-            ></div>
-
-        </div>
-
-    </div>
-
-
-    <section
-        id="memberCard"
-        class="member-card hidden"
-    >
-
-        <div class="member-label">
-            MEMBER
-        </div>
-
-        <div
-            id="customerName"
-            class="member-name"
-        >
-            —
-        </div>
-
-        <div
-            id="customerPhone"
-            class="member-phone"
-        >
-            —
-        </div>
-
-        <div
-            id="customerStampCount"
-            class="stamp-count"
-        >
-            0
-        </div>
-
-        <div class="stamp-caption">
-            CURRENT STAMPS
-        </div>
-
-        <button
-            id="addStampButton"
-            class="add-stamp-button"
-            type="button"
-        >
-            + ADD STAMP
-        </button>
-
-        <div
-            id="stampStatus"
-            class="status"
-        ></div>
-
-    </section>
-
-</section>
-
-</main>
-
-
-<script>
-
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
-    "https://qlhvjveokciltwlebtbh.supabase.co";
-
-const SUPABASE_ANON_KEY =
-    "sb_publishable_XKP8TdUHtlQfD18OMCs7dQ_w3IZAGqy";
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
+    loginScreen.classList.remove(
+        "hidden"
     );
 
-
-/* =====================================================
-   STATE
-===================================================== */
-
-let ACTIVE_MEMBER_ID = null;
-
-let html5QrCode = null;
-
-let CAMERA_RUNNING = false;
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const loginScreen =
-    document.getElementById("loginScreen");
-
-const dashboardScreen =
-    document.getElementById("dashboardScreen");
-
-const emailInput =
-    document.getElementById("emailInput");
-
-const passwordInput =
-    document.getElementById("passwordInput");
-
-const loginButton =
-    document.getElementById("loginButton");
-
-const loginStatus =
-    document.getElementById("loginStatus");
-
-const staffName =
-    document.getElementById("staffName");
-
-const logoutButton =
-    document.getElementById("logoutButton");
-
-const openCameraButton =
-    document.getElementById("openCameraButton");
-
-const stopCameraButton =
-    document.getElementById("stopCameraButton");
-
-const cameraWrap =
-    document.getElementById("cameraWrap");
-
-const cameraStatus =
-    document.getElementById("cameraStatus");
-
-const qrInput =
-    document.getElementById("qrInput");
-
-const lookupButton =
-    document.getElementById("lookupButton");
-
-const lookupStatus =
-    document.getElementById("lookupStatus");
-
-const memberCard =
-    document.getElementById("memberCard");
-
-const customerName =
-    document.getElementById("customerName");
-
-const customerPhone =
-    document.getElementById("customerPhone");
-
-const customerStampCount =
-    document.getElementById("customerStampCount");
-
-const addStampButton =
-    document.getElementById("addStampButton");
-
-const stampStatus =
-    document.getElementById("stampStatus");
-
-
-/* =====================================================
-   SCREEN
-===================================================== */
-
-function showLogin() {
-
-    loginScreen.classList.remove("hidden");
-
-    dashboardScreen.classList.add("hidden");
-
-}
-
-
-function showDashboard() {
-
-    loginScreen.classList.add("hidden");
-
-    dashboardScreen.classList.remove("hidden");
-
-}
-
-
-/* =====================================================
-   STAFF
-===================================================== */
-
-async function loadStaff() {
-
-    const {
-        data: userData,
-        error: userError
-    } =
-        await supabaseClient.auth.getUser();
-
-
-    if (
-        userError ||
-        !userData?.user
-    ) {
-
-        return false;
-
-    }
+    dashboardScreen.classList.add(
+        "hidden"
+    );
 
 
     const {
         data,
         error
     } =
-        await supabaseClient
-            .from("staff")
-            .select(
-                "name, outlet_id, role"
-            )
-            .eq(
-                "user_id",
-                userData.user.id
-            )
-            .maybeSingle();
+        await supabaseClient.auth
+            .getSession();
 
 
-    if (
-        error ||
-        !data
-    ) {
+    if (error) {
 
         console.error(
-            "STAFF LOAD ERROR:",
+            "SESSION ERROR:",
             error
-        );
-
-        await supabaseClient.auth.signOut();
-
-        return false;
-
-    }
-
-
-    staffName.textContent =
-        String(
-            data.name
-        ).toUpperCase();
-
-
-    return true;
-
-}
-
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-loginButton.addEventListener(
-    "click",
-    async function () {
-
-        const email =
-            emailInput.value.trim();
-
-        const password =
-            passwordInput.value;
-
-
-        if (
-            !email ||
-            !password
-        ) {
-
-            loginStatus.textContent =
-                "ENTER EMAIL + PASSWORD.";
-
-            return;
-
-        }
-
-
-        loginButton.disabled = true;
-
-        loginButton.textContent =
-            "LOGGING IN...";
-
-        loginStatus.textContent =
-            "";
-
-
-        const {
-            error
-        } =
-            await supabaseClient
-                .auth
-                .signInWithPassword({
-                    email,
-                    password
-                });
-
-
-        if (error) {
-
-            console.error(
-                "LOGIN ERROR:",
-                error
-            );
-
-            loginButton.disabled = false;
-
-            loginButton.textContent =
-                "LOGIN";
-
-            loginStatus.textContent =
-                "LOGIN FAILED.";
-
-            return;
-
-        }
-
-
-        const staffValid =
-            await loadStaff();
-
-
-        if (!staffValid) {
-
-            loginButton.disabled = false;
-
-            loginButton.textContent =
-                "LOGIN";
-
-            loginStatus.textContent =
-                "NOT AUTHORIZED AS STAFF.";
-
-            return;
-
-        }
-
-
-        showDashboard();
-
-        loginButton.disabled = false;
-
-        loginButton.textContent =
-            "LOGIN";
-
-    }
-);
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-logoutButton.addEventListener(
-    "click",
-    async function () {
-
-        await stopCamera();
-
-        await supabaseClient.auth.signOut();
-
-        ACTIVE_MEMBER_ID = null;
-
-        memberCard.classList.add(
-            "hidden"
         );
 
         showLogin();
 
-    }
-);
-
-
-/* =====================================================
-   PARSE QR
-===================================================== */
-
-function parseQrData(raw) {
-
-    let text =
-        raw.trim();
-
-
-    if (!text) {
-        return null;
-    }
-
-
-    try {
-
-        text =
-            decodeURIComponent(
-                text
-            );
-
-    } catch (e) {}
-
-
-    try {
-
-        const parsed =
-            JSON.parse(text);
-
-
-        if (
-            parsed.type !==
-            "vyne-club"
-        ) {
-
-            return null;
-
-        }
-
-
-        const memberId =
-            Number(
-                parsed.member_id
-            );
-
-
-        if (
-            !memberId ||
-            !Number.isFinite(
-                memberId
-            )
-        ) {
-
-            return null;
-
-        }
-
-
-        return {
-            member_id:
-                memberId
-        };
-
-
-    } catch (e) {
-
-        return null;
-
-    }
-
-}
-
-
-/* =====================================================
-   LOAD CUSTOMER
-===================================================== */
-
-async function loadCustomer(
-    memberId
-) {
-
-    lookupStatus.textContent =
-        "LOOKING UP MEMBER...";
-
-
-    memberCard.classList.add(
-        "hidden"
-    );
-
-
-    const {
-        data: member,
-        error: memberError
-    } =
-        await supabaseClient
-            .from("members")
-            .select(
-                "id, name, phone"
-            )
-            .eq(
-                "id",
-                memberId
-            )
-            .maybeSingle();
-
-
-    if (
-        memberError ||
-        !member
-    ) {
-
-        console.error(
-            "MEMBER LOOKUP ERROR:",
-            memberError
-        );
-
-        lookupStatus.textContent =
-            "MEMBER NOT FOUND.";
-
         return;
 
     }
-
-
-    const {
-        data: stampData,
-        error: stampError
-    } =
-        await supabaseClient
-            .from("stamps")
-            .select(
-                "stamps"
-            )
-            .eq(
-                "member_id",
-                memberId
-            )
-            .maybeSingle();
-
-
-    if (stampError) {
-
-        console.error(
-            "STAMP LOOKUP ERROR:",
-            stampError
-        );
-
-    }
-
-
-    ACTIVE_MEMBER_ID =
-        member.id;
-
-
-    customerName.textContent =
-        String(
-            member.name
-        ).toUpperCase();
-
-
-    customerPhone.textContent =
-        member.phone || "—";
-
-
-    customerStampCount.textContent =
-        String(
-            Number(
-                stampData?.stamps ||
-                0
-            )
-        );
-
-
-    lookupStatus.textContent =
-        "";
-
-
-    stampStatus.textContent =
-        "";
-
-
-    memberCard.classList.remove(
-        "hidden"
-    );
-
-
-    memberCard.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-    });
-
-}
-
-
-/* =====================================================
-   CAMERA
-===================================================== */
-
-async function startCamera() {
-
-    if (CAMERA_RUNNING) {
-        return;
-    }
-
-
-    cameraStatus.textContent =
-        "STARTING CAMERA...";
-
-
-    openCameraButton.disabled =
-        true;
-
-
-    cameraWrap.classList.remove(
-        "hidden"
-    );
-
-
-    stopCameraButton.classList.remove(
-        "hidden"
-    );
-
-
-    try {
-
-        html5QrCode =
-            new Html5Qrcode(
-                "qrReader"
-            );
-
-
-        await html5QrCode.start(
-
-            {
-                facingMode:
-                    "environment"
-            },
-
-            {
-                fps: 10,
-
-                qrbox: {
-                    width: 240,
-                    height: 240
-                },
-
-                aspectRatio: 1
-            },
-
-            async function (
-                decodedText
-            ) {
-
-                const parsed =
-                    parseQrData(
-                        decodedText
-                    );
-
-
-                if (!parsed) {
-
-                    cameraStatus.textContent =
-                        "NOT A VYNÉ CLUB QR.";
-
-                    return;
-
-                }
-
-
-                cameraStatus.textContent =
-                    "MEMBER FOUND.";
-
-
-                await stopCamera();
-
-
-                await loadCustomer(
-                    parsed.member_id
-                );
-
-            },
-
-            function () {
-                // normal scan misses ignored
-            }
-
-        );
-
-
-        CAMERA_RUNNING = true;
-
-
-        cameraStatus.textContent =
-            "POINT CAMERA AT MEMBER QR.";
-
-
-    } catch (error) {
-
-        console.error(
-            "CAMERA ERROR:",
-            error
-        );
-
-
-        CAMERA_RUNNING = false;
-
-
-        cameraStatus.textContent =
-            "CAMERA ACCESS FAILED.";
-
-
-        cameraWrap.classList.add(
-            "hidden"
-        );
-
-
-        stopCameraButton.classList.add(
-            "hidden"
-        );
-
-
-        openCameraButton.disabled =
-            false;
-
-    }
-
-}
-
-
-async function stopCamera() {
-
-    if (
-        !html5QrCode ||
-        !CAMERA_RUNNING
-    ) {
-
-        cameraWrap.classList.add(
-            "hidden"
-        );
-
-        stopCameraButton.classList.add(
-            "hidden"
-        );
-
-        openCameraButton.disabled =
-            false;
-
-        return;
-
-    }
-
-
-    try {
-
-        await html5QrCode.stop();
-
-        await html5QrCode.clear();
-
-    } catch (error) {
-
-        console.warn(
-            "STOP CAMERA ERROR:",
-            error
-        );
-
-    }
-
-
-    CAMERA_RUNNING = false;
-
-
-    html5QrCode = null;
-
-
-    cameraWrap.classList.add(
-        "hidden"
-    );
-
-
-    stopCameraButton.classList.add(
-        "hidden"
-    );
-
-
-    openCameraButton.disabled =
-        false;
-
-}
-
-
-/* =====================================================
-   CAMERA BUTTONS
-===================================================== */
-
-openCameraButton.addEventListener(
-    "click",
-    startCamera
-);
-
-
-stopCameraButton.addEventListener(
-    "click",
-    stopCamera
-);
-
-
-/* =====================================================
-   MANUAL LOOKUP
-===================================================== */
-
-lookupButton.addEventListener(
-    "click",
-    async function () {
-
-        const parsed =
-            parseQrData(
-                qrInput.value
-            );
-
-
-        if (!parsed) {
-
-            lookupStatus.textContent =
-                "INVALID VYNÉ QR.";
-
-            return;
-
-        }
-
-
-        await stopCamera();
-
-
-        await loadCustomer(
-            parsed.member_id
-        );
-
-    }
-);
-
-
-/* =====================================================
-   ADD STAMP
-===================================================== */
-
-addStampButton.addEventListener(
-    "click",
-    async function () {
-
-        if (!ACTIVE_MEMBER_ID) {
-
-            stampStatus.textContent =
-                "NO MEMBER SELECTED.";
-
-            return;
-
-        }
-
-
-        addStampButton.disabled =
-            true;
-
-
-        addStampButton.textContent =
-            "ADDING...";
-
-
-        stampStatus.textContent =
-            "";
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.rpc(
-                "add_stamp",
-                {
-                    p_member_id:
-                        ACTIVE_MEMBER_ID
-                }
-            );
-
-
-        if (error) {
-
-            console.error(
-                "ADD STAMP ERROR:",
-                error
-            );
-
-
-            stampStatus.textContent =
-                "STAMP FAILED.";
-
-
-            addStampButton.disabled =
-                false;
-
-
-            addStampButton.textContent =
-                "+ ADD STAMP";
-
-
-            return;
-
-        }
-
-
-        customerStampCount.textContent =
-            String(data);
-
-
-        stampStatus.textContent =
-            "STAMP ADDED.";
-
-
-        addStampButton.disabled =
-            false;
-
-
-        addStampButton.textContent =
-            "+ ADD STAMP";
-
-    }
-);
-
-
-/* =====================================================
-   INIT
-===================================================== */
-
-async function init() {
-
-    const {
-        data
-    } =
-        await supabaseClient.auth.getSession();
 
 
     if (
         data?.session
     ) {
 
-        const staffValid =
+        const authorized =
             await loadStaff();
 
 
-        if (staffValid) {
+        if (authorized) {
 
             showDashboard();
 
             return;
 
         }
+
+
+        await supabaseClient.auth
+            .signOut();
 
     }
 
@@ -2900,4 +1663,4 @@ init();
 
 </body>
 
-    </html>
+            </html>
