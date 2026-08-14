@@ -952,28 +952,32 @@ function closeQrModal() {
 }
 
 
-qrButton.addEventListener(
-    "click",
-    openQr
-);
+if (qrButton) {
+    qrButton.addEventListener(
+        "click",
+        openQr
+    );
+}
 
+if (closeQr) {
+    closeQr.addEventListener(
+        "click",
+        closeQrModal
+    );
+}
 
-closeQr.addEventListener(
-    "click",
-    closeQrModal
-);
+if (qrModal) {
+    qrModal.addEventListener(
+        "click",
+        function(event) {
 
+            if (event.target === qrModal) {
+                closeQrModal();
+            }
 
-qrModal.addEventListener(
-    "click",
-    function(event) {
-
-        if (event.target === qrModal) {
-            closeQrModal();
         }
-
-    }
-);
+    );
+}
 
 /* =====================================================
    REGISTRATION
