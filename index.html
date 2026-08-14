@@ -191,11 +191,16 @@ input {
 }
 
 .club-name {
-    font-family: "Caveat", cursive;
-    font-size: 58px;
-    font-weight: 500;
-    line-height: .8;
-    letter-spacing: 2px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.club-logo-image {
+    display: block;
+    width: 100%;
+    max-width: 330px;
+    height: auto;
 }
 
 .club-subtitle {
@@ -589,7 +594,11 @@ input {
     <header class="brand">
 
         <div class="club-name">
-            VYNÉ CLUB
+    <img
+        src="vyne-logo.png"
+        alt="VYNÉ CLUB"
+        class="club-logo-image"
+    >
         </div>
 
         <div class="club-subtitle">
