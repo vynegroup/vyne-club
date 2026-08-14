@@ -1311,6 +1311,9 @@ let MEMBER_ID = null;
 const registrationScreen =
     document.getElementById("registrationScreen");
 
+const memberScreen =
+    document.getElementById("memberScreen");
+    
 const registerName =
     document.getElementById("registerName");
 
@@ -1356,43 +1359,23 @@ const qrName =
 
 
 /* =====================================================
-   MEMBER SCREEN ELEMENTS
-===================================================== */
-
-const memberScreenElements =
-    Array.from(
-        document.querySelectorAll(
-            ".app > :not(#registrationScreen)"
-        )
-    );
-
-
-/* =====================================================
    SCREEN CONTROL
 ===================================================== */
 
 function showRegistrationScreen() {
 
-    registrationScreen.style.display = "flex";
+    registrationScreen.classList.remove("hidden");
 
-    memberScreenElements.forEach(
-        function(element) {
-            element.style.display = "none";
-        }
-    );
+    memberScreen.classList.add("hidden");
 
 }
 
 
 function showMemberScreen() {
 
-    registrationScreen.style.display = "none";
+    registrationScreen.classList.add("hidden");
 
-    memberScreenElements.forEach(
-        function(element) {
-            element.style.display = "";
-        }
-    );
+    memberScreen.classList.remove("hidden");
 
 }
 
