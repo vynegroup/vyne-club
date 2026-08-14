@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>VYNÉ CLUB — STAFF</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+:root {
+    --black: #080808;
+    --cream: #f2eee5;
+    --line: rgba(242,238,229,.35);
+    --muted: rgba(242,238,229,.6);
+    --danger: #ff8f8f;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: "Space Mono", monospace;
+    display: flex;
+    justify-content: center;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.app {
+    width: 100%;
+    max-width: 430px;
+    min-height: 100vh;
+    padding: 42px 30px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================
+   COMMON
+========================= */
+
+.small-label {
+    font-size: 10px;
+    letter-spacing: .3em;
+    color: var(--muted);
+}
+
+.big-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 64px;
+    line-height: .9;
+    margin-top: 22px;
+}
+
+.rule {
+    height: 1px;
+    background: var(--line);
+    margin: 28px 0;
+}
+
+.status {
+    min-height: 18px;
+    margin-top: 16px;
+    font-size: 10px;
+    line-height: 1.6;
+    letter-spacing: .08em;
+    color: var(--muted);
+}
+
+.status.error {
+    color: var(--danger);
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-screen {
+    padding-top: 40px;
+}
+
+.login-copy {
+    margin-top: 28px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--muted);
+}
+
+.form {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form label {
+    font-size: 10px;
+    letter-spacing: .25em;
+    color: var(--muted);
+    margin-bottom: 10px;
+}
+
+.form input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    padding: 12px 0;
+    margin-bottom: 30px;
+    outline: none;
+    border-radius: 0;
+}
+
+.form input:focus {
+    border-bottom-color: var(--cream);
+}
+
+.primary-button {
+    width: 100%;
+    border: none;
+    background: var(--cream);
+    color: var(--black);
+    padding: 18px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    cursor: pointer;
+}
+
+.primary-button:disabled {
+    opacity: .5;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.staff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.staff-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 28px;
+}
+
+.logout-button {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--cream);
+    padding: 10px 12px;
+    font-size: 9px;
+    letter-spacing: .15em;
+}
+
+.scan-box {
+    margin-top: 50px;
+}
+
+.scan-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 48px;
+    line-height: .95;
+}
+
+.scan-copy {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.qr-input {
+    width: 100%;
+    margin-top: 32px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    color: var(--cream);
+    padding: 14px 0;
+    outline: none;
+}
+
+.lookup-button {
+    width: 100%;
+    margin-top: 24px;
+    background: transparent;
+    border: 1px solid var(--cream);
+    color: var(--cream);
+    padding: 17px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .2em;
+}
+
+/* =========================
+   MEMBER RESULT
+========================= */
+
+.member-card {
+    margin-top: 46px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+}
+
+.member-label {
+    font-size: 10px;
+    letter-spacing: .3em;
+    color: var(--muted);
+}
+
+.member-name {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 58px;
+    margin-top: 14px;
+}
+
+.member-phone {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.stamp-count {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: 110px;
+    line-height: .8;
+    margin-top: 34px;
+}
+
+.stamp-caption {
+    font-size: 10px;
+    letter-spacing: .3em;
+    color: var(--muted);
+    margin-top: 20px;
+}
+
+.add-stamp-button {
+    width: 100%;
+    margin-top: 40px;
+    padding: 20px;
+    border: none;
+    background: var(--cream);
+    color: var(--black);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .2em;
+}
+
+.add-stamp-button:disabled {
+    opacity: .5;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="app">
+
+<!-- =====================================================
+     LOGIN SCREEN
+===================================================== -->
+
+<section id="loginScreen" class="login-screen">
+
+    <div class="small-label">
+        VYNÉ CLUB / STAFF
+    </div>
+
+    <div class="big-title">
+        STAFF<br>
+        ACCESS.
+    </div>
+
+    <div class="login-copy">
+        Authorized personnel only.<br>
+        Very serious loyalty business.
+    </div>
+
+    <div class="form">
+
+        <label for="emailInput">
+            EMAIL
+        </label>
+
+        <input
+            id="emailInput"
+            type="email"
+            autocomplete="email"
+        >
+
+        <label for="passwordInput">
+            PASSWORD
+        </label>
+
+        <input
+            id="passwordInput"
+            type="password"
+            autocomplete="current-password"
+        >
+
+        <button
+            id="loginButton"
+            class="primary-button"
+            type="button"
+        >
+            LOGIN
+        </button>
+
+        <div
+            id="loginStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     STAFF DASHBOARD
+===================================================== -->
+
+<section id="dashboardScreen" class="hidden">
+
+    <div class="staff-header">
+
+        <div>
+
+            <div class="small-label">
+                VYNÉ CLUB / STAFF
+            </div>
+
+            <div
+                id="staffName"
+                class="staff-name"
+            >
+                STAFF
+            </div>
+
+        </div>
+
+        <button
+            id="logoutButton"
+            class="logout-button"
+            type="button"
+        >
+            LOGOUT
+        </button>
+
+    </div>
+
+    <div class="scan-box">
+
+        <div class="scan-title">
+            MEMBER<br>
+            CHECK-IN.
+        </div>
+
+        <div class="scan-copy">
+            Paste customer QR data below.
+            Camera scanner comes next.
+        </div>
+
+        <input
+            id="qrInput"
+            class="qr-input"
+            type="text"
+            placeholder="PASTE QR DATA"
+        >
+
+        <button
+            id="lookupButton"
+            class="lookup-button"
+            type="button"
+        >
+            FIND MEMBER
+        </button>
+
+        <div
+            id="lookupStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+
+    <section
+        id="memberCard"
+        class="member-card hidden"
+    >
+
+        <div class="member-label">
+            MEMBER
+        </div>
+
+        <div
+            id="customerName"
+            class="member-name"
+        >
+            —
+        </div>
+
+        <div
+            id="customerPhone"
+            class="member-phone"
+        >
+            —
+        </div>
+
+        <div
+            id="customerStampCount"
+            class="stamp-count"
+        >
+            0
+        </div>
+
+        <div class="stamp-caption">
+            CURRENT STAMPS
+        </div>
+
+        <button
+            id="addStampButton"
+            class="add-stamp-button"
+            type="button"
+        >
+            + ADD STAMP
+        </button>
+
+        <div
+            id="stampStatus"
+            class="status"
+        ></div>
+
+    </section>
+
+</section>
+
+</main>
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://qlhvjveokciltwlebtbh.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_XKP8TdUHtlQfD18OMCs7dQ_w3IZAGqy";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let ACTIVE_MEMBER_ID = null;
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const dashboardScreen =
+    document.getElementById("dashboardScreen");
+
+const emailInput =
+    document.getElementById("emailInput");
+
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginStatus =
+    document.getElementById("loginStatus");
+
+const staffName =
+    document.getElementById("staffName");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+const qrInput =
+    document.getElementById("qrInput");
+
+const lookupButton =
+    document.getElementById("lookupButton");
+
+const lookupStatus =
+    document.getElementById("lookupStatus");
+
+const memberCard =
+    document.getElementById("memberCard");
+
+const customerName =
+    document.getElementById("customerName");
+
+const customerPhone =
+    document.getElementById("customerPhone");
+
+const customerStampCount =
+    document.getElementById("customerStampCount");
+
+const addStampButton =
+    document.getElementById("addStampButton");
+
+const stampStatus =
+    document.getElementById("stampStatus");
+
+
+/* =====================================================
+   SCREEN
+===================================================== */
+
+function showLogin() {
+
+    loginScreen.classList.remove("hidden");
+
+    dashboardScreen.classList.add("hidden");
+
+}
+
+
+function showDashboard() {
+
+    loginScreen.classList.add("hidden");
+
+    dashboardScreen.classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+   LOAD STAFF
+===================================================== */
+
+async function loadStaff() {
+
+    const {
+        data: userData,
+        error: userError
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    if (
+        userError ||
+        !userData?.user
+    ) {
+
+        return false;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("staff")
+            .select(
+                "name, outlet_id, role"
+            )
+            .eq(
+                "user_id",
+                userData.user.id
+            )
+            .maybeSingle();
+
+
+    if (
+        error ||
+        !data
+    ) {
+
+        console.error(
+            "STAFF LOAD ERROR:",
+            error
+        );
+
+        await supabaseClient.auth.signOut();
+
+        return false;
+
+    }
+
+
+    staffName.textContent =
+        String(
+            data.name
+        ).toUpperCase();
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginButton.addEventListener(
+    "click",
+    async function () {
+
+        const email =
+            emailInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+
+        if (
+            !email ||
+            !password
+        ) {
+
+            loginStatus.textContent =
+                "ENTER EMAIL + PASSWORD.";
+
+            return;
+
+        }
+
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "LOGGING IN...";
+
+        loginStatus.textContent =
+            "";
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+
+        if (error) {
+
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
+
+            loginButton.disabled = false;
+
+            loginButton.textContent =
+                "LOGIN";
+
+            loginStatus.textContent =
+                "LOGIN FAILED.";
+
+            return;
+
+        }
+
+
+        const staffValid =
+            await loadStaff();
+
+
+        if (!staffValid) {
+
+            loginButton.disabled = false;
+
+            loginButton.textContent =
+                "LOGIN";
+
+            loginStatus.textContent =
+                "NOT AUTHORIZED AS STAFF.";
+
+            return;
+
+        }
+
+
+        showDashboard();
+
+
+        loginButton.disabled = false;
+
+        loginButton.textContent =
+            "LOGIN";
+
+    }
+);
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logoutButton.addEventListener(
+    "click",
+    async function () {
+
+        await supabaseClient.auth.signOut();
+
+        ACTIVE_MEMBER_ID = null;
+
+        memberCard.classList.add(
+            "hidden"
+        );
+
+        showLogin();
+
+    }
+);
+
+
+/* =====================================================
+   PARSE CUSTOMER QR
+===================================================== */
+
+function parseQrData(raw) {
+
+    let text =
+        raw.trim();
+
+
+    if (!text) {
+        return null;
+    }
+
+
+    try {
+
+        text =
+            decodeURIComponent(
+                text
+            );
+
+    } catch (e) {
+        // already decoded
+    }
+
+
+    try {
+
+        const parsed =
+            JSON.parse(text);
+
+
+        if (
+            parsed.type !==
+            "vyne-club"
+        ) {
+
+            return null;
+
+        }
+
+
+        const memberId =
+            Number(
+                parsed.member_id
+            );
+
+
+        if (
+            !memberId ||
+            !Number.isFinite(
+                memberId
+            )
+        ) {
+
+            return null;
+
+        }
+
+
+        return {
+            member_id:
+                memberId
+        };
+
+
+    } catch (e) {
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD CUSTOMER
+===================================================== */
+
+async function loadCustomer(
+    memberId
+) {
+
+    lookupStatus.textContent =
+        "LOOKING UP MEMBER...";
+
+
+    memberCard.classList.add(
+        "hidden"
+    );
+
+
+    const {
+        data: member,
+        error: memberError
+    } =
+        await supabaseClient
+            .from("members")
+            .select(
+                "id, name, phone"
+            )
+            .eq(
+                "id",
+                memberId
+            )
+            .maybeSingle();
+
+
+    if (
+        memberError ||
+        !member
+    ) {
+
+        console.error(
+            "MEMBER LOOKUP ERROR:",
+            memberError
+        );
+
+        lookupStatus.textContent =
+            "MEMBER NOT FOUND.";
+
+        return;
+
+    }
+
+
+    const {
+        data: stampData,
+        error: stampError
+    } =
+        await supabaseClient
+            .from("stamps")
+            .select(
+                "stamps"
+            )
+            .eq(
+                "member_id",
+                memberId
+            )
+            .maybeSingle();
+
+
+    if (stampError) {
+
+        console.error(
+            "STAMP LOOKUP ERROR:",
+            stampError
+        );
+
+    }
+
+
+    ACTIVE_MEMBER_ID =
+        member.id;
+
+
+    customerName.textContent =
+        String(
+            member.name
+        ).toUpperCase();
+
+
+    customerPhone.textContent =
+        member.phone || "—";
+
+
+    customerStampCount.textContent =
+        String(
+            Number(
+                stampData?.stamps ||
+                0
+            )
+        );
+
+
+    lookupStatus.textContent =
+        "";
+
+
+    stampStatus.textContent =
+        "";
+
+
+    memberCard.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =====================================================
+   FIND MEMBER
+===================================================== */
+
+lookupButton.addEventListener(
+    "click",
+    async function () {
+
+        const parsed =
+            parseQrData(
+                qrInput.value
+            );
+
+
+        if (!parsed) {
+
+            lookupStatus.textContent =
+                "INVALID VYNÉ QR.";
+
+            return;
+
+        }
+
+
+        await loadCustomer(
+            parsed.member_id
+        );
+
+    }
+);
+
+
+/* =====================================================
+   ADD STAMP
+===================================================== */
+
+addStampButton.addEventListener(
+    "click",
+    async function () {
+
+        if (!ACTIVE_MEMBER_ID) {
+
+            stampStatus.textContent =
+                "NO MEMBER SELECTED.";
+
+            return;
+
+        }
+
+
+        addStampButton.disabled =
+            true;
+
+
+        addStampButton.textContent =
+            "ADDING...";
+
+
+        stampStatus.textContent =
+            "";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "add_stamp",
+                {
+                    p_member_id:
+                        ACTIVE_MEMBER_ID
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "ADD STAMP ERROR:",
+                error
+            );
+
+
+            stampStatus.textContent =
+                "STAMP FAILED.";
+
+
+            addStampButton.disabled =
+                false;
+
+
+            addStampButton.textContent =
+                "+ ADD STAMP";
+
+
+            return;
+
+        }
+
+
+        customerStampCount.textContent =
+            String(data);
+
+
+        stampStatus.textContent =
+            "STAMP ADDED.";
+
+
+        addStampButton.disabled =
+            false;
+
+
+        addStampButton.textContent =
+            "+ ADD STAMP";
+
+    }
+);
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+async function init() {
+
+    const {
+        data
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (
+        data?.session
+    ) {
+
+        const staffValid =
+            await loadStaff();
+
+
+        if (staffValid) {
+
+            showDashboard();
+
+            return;
+
+        }
+
+    }
+
+
+    showLogin();
+
+}
+
+
+init();
+
+</script>
+
+</body>
+
+          </html>
