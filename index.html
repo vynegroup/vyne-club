@@ -687,7 +687,7 @@ async function loadStamps() {
         .select("stamps")
         .eq("member_id", MEMBER_ID)
         .eq("outlet_id", OUTLET_ID)
-        .single();
+        .maybeSingle();
 
 
     if (error) {
