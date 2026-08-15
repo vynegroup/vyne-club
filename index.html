@@ -1327,33 +1327,31 @@ async function loadRewards() {
         return;
     }
 
+
+    /* =========================
+       GET AVAILABLE MEMBER REWARD
+    ========================= */
+
     const {
-        data,
-        error
+        data: memberReward,
+        error: memberRewardError
     } = await supabaseClient
         .from("member_rewards")
-        .select(`
-            id,
-            status,
-            reward_id,
-            rewards (
-                id,
-                name,
-                description
-            )
-        `)
+        .select("id, reward_id, status")
         .eq("member_id", MEMBER_ID)
         .eq("status", "available")
-        .order("created_at", {
+        .order("earned_at", {
             ascending: false
-        });
+        })
+        .limit(1)
+        .maybeSingle();
 
 
-    if (error) {
+    if (memberRewardError) {
 
         console.error(
-            "LOAD REWARDS ERROR:",
-            error
+            "MEMBER REWARD ERROR:",
+            memberRewardError
         );
 
         rewardName.textContent =
@@ -1367,7 +1365,7 @@ async function loadRewards() {
     }
 
 
-    if (!data || data.length === 0) {
+    if (!memberReward) {
 
         rewardName.textContent =
             "NOTHING YET.";
@@ -1380,17 +1378,54 @@ async function loadRewards() {
     }
 
 
-    const reward =
-        data[0].rewards;
+    /* =========================
+       GET REWARD DETAILS
+    ========================= */
 
+    const {
+        data: reward,
+        error: rewardError
+    } = await supabaseClient
+        .from("rewards")
+        .select("id, name, description")
+        .eq(
+            "id",
+            memberReward.reward_id
+        )
+        .maybeSingle();
+
+
+    if (
+        rewardError ||
+        !reward
+    ) {
+
+        console.error(
+            "REWARD DETAIL ERROR:",
+            rewardError
+        );
+
+        rewardName.textContent =
+            "REWARD UNLOCKED.";
+
+        rewardStatus.textContent =
+            "YOU EARNED THIS.";
+
+        return;
+
+    }
+
+
+    /* =========================
+       SHOW REWARD
+    ========================= */
 
     rewardName.textContent =
-        reward?.name ||
+        reward.name ||
         "REWARD UNLOCKED.";
 
-
     rewardStatus.textContent =
-        reward?.description ||
+        reward.description ||
         "YOU EARNED THIS.";
 
 }
