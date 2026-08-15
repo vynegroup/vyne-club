@@ -1324,101 +1324,124 @@ async function loadActivity() {
 async function loadRewards() {
 
     if (!MEMBER_ID) {
+        rewardName.textContent =
+            "NO MEMBER ID.";
+
+        rewardStatus.textContent =
+            "DEBUG.";
+
         return;
     }
 
 
-    /* =========================
-       GET AVAILABLE MEMBER REWARD
-    ========================= */
-
     const {
-        data: memberReward,
+        data: memberRewards,
         error: memberRewardError
     } = await supabaseClient
         .from("member_rewards")
-        .select("id, reward_id, status")
-        .eq("member_id", MEMBER_ID)
-        .eq("status", "available")
-        .order("earned_at", {
-            ascending: false
-        })
-        .limit(1)
-        .maybeSingle();
+        .select("*")
+        .eq(
+            "member_id",
+            MEMBER_ID
+        );
 
 
     if (memberRewardError) {
 
-        console.error(
-            "MEMBER REWARD ERROR:",
-            memberRewardError
+        rewardName.textContent =
+            "MEMBER REWARD ERROR.";
+
+        rewardStatus.textContent =
+            memberRewardError.message ||
+            "UNKNOWN ERROR.";
+
+        return;
+
+    }
+
+
+    if (
+        !memberRewards ||
+        memberRewards.length === 0
+    ) {
+
+        rewardName.textContent =
+            "NO REWARD ROW.";
+
+        rewardStatus.textContent =
+            "MEMBER ID: " +
+            MEMBER_ID;
+
+        return;
+
+    }
+
+
+    const availableReward =
+        memberRewards.find(
+            function(item) {
+                return (
+                    item.status ===
+                    "available"
+                );
+            }
         );
 
+
+    if (!availableReward) {
+
         rewardName.textContent =
-            "NOTHING YET.";
+            "NO AVAILABLE REWARD.";
 
         rewardStatus.textContent =
-            "KEEP SHOWING UP.";
+            "ROWS FOUND: " +
+            memberRewards.length;
 
         return;
 
     }
 
-
-    if (!memberReward) {
-
-        rewardName.textContent =
-            "NOTHING YET.";
-
-        rewardStatus.textContent =
-            "KEEP SHOWING UP.";
-
-        return;
-
-    }
-
-
-    /* =========================
-       GET REWARD DETAILS
-    ========================= */
 
     const {
         data: reward,
         error: rewardError
     } = await supabaseClient
         .from("rewards")
-        .select("id, name, description")
+        .select("*")
         .eq(
             "id",
-            memberReward.reward_id
+            availableReward.reward_id
         )
         .maybeSingle();
 
 
-    if (
-        rewardError ||
-        !reward
-    ) {
-
-        console.error(
-            "REWARD DETAIL ERROR:",
-            rewardError
-        );
+    if (rewardError) {
 
         rewardName.textContent =
-            "REWARD UNLOCKED.";
+            "REWARD DETAIL ERROR.";
 
         rewardStatus.textContent =
-            "YOU EARNED THIS.";
+            rewardError.message ||
+            "UNKNOWN ERROR.";
 
         return;
 
     }
 
 
-    /* =========================
-       SHOW REWARD
-    ========================= */
+    if (!reward) {
+
+        rewardName.textContent =
+            "REWARD NOT FOUND.";
+
+        rewardStatus.textContent =
+            "REWARD ID: " +
+            availableReward.reward_id;
+
+        return;
+
+    }
+
 
     rewardName.textContent =
         reward.name ||
