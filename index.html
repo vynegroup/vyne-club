@@ -1321,22 +1321,77 @@ async function loadActivity() {
    REWARDS
 ===================================================== */
 
-function loadRewardPlaceholder() {
+async function loadRewards() {
 
-    /*
-       Reward rules intentionally remain inactive
-       until Vyné decides the commercial mechanics.
+    if (!MEMBER_ID) {
+        return;
+    }
 
-       The UI is already separated from visit activity,
-       so future rewards do not need to change the
-       activity architecture.
-    */
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("member_rewards")
+        .select(`
+            id,
+            status,
+            reward_id,
+            rewards (
+                id,
+                name,
+                description
+            )
+        `)
+        .eq("member_id", MEMBER_ID)
+        .eq("status", "available")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+        console.error(
+            "LOAD REWARDS ERROR:",
+            error
+        );
+
+        rewardName.textContent =
+            "NOTHING YET.";
+
+        rewardStatus.textContent =
+            "KEEP SHOWING UP.";
+
+        return;
+
+    }
+
+
+    if (!data || data.length === 0) {
+
+        rewardName.textContent =
+            "NOTHING YET.";
+
+        rewardStatus.textContent =
+            "KEEP SHOWING UP.";
+
+        return;
+
+    }
+
+
+    const reward =
+        data[0].rewards;
+
 
     rewardName.textContent =
-        "NOTHING YET.";
+        reward?.name ||
+        "REWARD UNLOCKED.";
+
 
     rewardStatus.textContent =
-        "KEEP SHOWING UP.";
+        reward?.description ||
+        "YOU EARNED THIS.";
 
 }
 
@@ -1558,7 +1613,7 @@ if (registerButton) {
 
                 subscribeToStampUpdates();
 
-                loadRewardPlaceholder();
+                await loadRewards();
 
                 showMemberScreen();
 
@@ -1649,7 +1704,7 @@ if (registerButton) {
 
             resetActivity();
 
-            loadRewardPlaceholder();
+            await loadRewards();
 
             showMemberScreen();
 
@@ -1747,7 +1802,7 @@ async function init() {
 
                 subscribeToStampUpdates();
 
-                loadRewardPlaceholder();
+                await loadRewards();
 
                 return;
 
