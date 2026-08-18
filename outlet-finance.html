@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- VYNE OUTLET FINANCE BUILD: STOCK-RECEIPT-V1 / 2026-08-18 -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -39,6 +40,7 @@
       <button class="tab on" data-view="todayView">TODAY</button>
       <button class="tab" data-view="closingView">DAILY CLOSING</button>
       <button class="tab" data-view="expenseView">EXPENSE</button>
+      <button class="tab" data-view="stockView">STOCK</button>
       <button class="tab" data-view="historyView">HISTORY</button>
     </nav>
 
@@ -96,6 +98,22 @@
       </section>
     </section>
 
+    <section id="stockView" class="view">
+      <section class="section"><h2>INCOMING STOCK</h2><div id="incomingStockList" class="list"></div></section>
+      <section class="section"><h2>USAGE / WASTE</h2>
+        <form id="stockOperationForm" class="card">
+          <div class="locked">RECORD ACTUAL STOCK USED OR WASTED. THE QUANTITY WILL REDUCE YOUR OUTLET STOCK.</div>
+          <div class="field"><label>DATE</label><input id="stockOperationDate" type="date" required></div>
+          <div class="field"><label>ITEM</label><select id="stockOperationItem" required></select></div>
+          <div class="field"><label>TYPE</label><select id="stockOperationType"><option value="USAGE_OUT">USED IN OPERATION</option><option value="WASTE_OUT">WASTE / DAMAGED</option></select></div>
+          <div class="field"><label>QUANTITY</label><input id="stockOperationQuantity" type="number" min=".001" step=".001" required></div>
+          <div class="field"><label>REASON / NOTES</label><textarea id="stockOperationNotes" required></textarea></div>
+          <button class="primary">RECORD STOCK OUT</button><div id="stockOperationStatus" class="status"></div>
+        </form>
+      </section>
+      <section class="section"><h2>CURRENT STOCK</h2><div id="outletStockList" class="list"></div></section>
+    </section>
+
     <section id="historyView" class="view">
       <section class="section"><h2>HISTORY</h2>
         <div class="filters"><input id="historyMonth" type="month"></div>
@@ -111,7 +129,7 @@
     const $=id=>document.getElementById(id),num=x=>Number(x||0),rup=x=>"RP"+new Intl.NumberFormat("id-ID").format(num(x));
     const today=()=>new Date().toISOString().slice(0,10),month=()=>today().slice(0,7),safe=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
     const closingTotal=x=>num(x.cash)+num(x.qris)+num(x.transfer_amount)+num(x.delivery_platform)+num(x.other_revenue);
-    let user=null,access=null,unit=null,closings=[],expenses=[];
+    let user=null,access=null,unit=null,closings=[],expenses=[],inventoryItems=[],incomingTransfers=[],stockBalances=[];
 
     function showLogin(message=""){$("login").classList.remove("hidden");$("app").classList.add("hidden");$("loginStatus").textContent=message}
     function showApp(){$("login").classList.add("hidden");$("app").classList.remove("hidden")}
@@ -129,17 +147,20 @@
       access=data;
       const result=await db.from("finance_units").select("id,name").eq("id",access.unit_id).single();
       if(result.error||!result.data){await db.auth.signOut();return showLogin("OUTLET NOT FOUND.")}
-      unit=result.data;showApp();$("identity").textContent=`${access.display_name} / ${unit.name}`;$("heroCopy").textContent=`Daily closing and operational expenses for ${unit.name}.`;$("closingUnitLabel").value=unit.name;$("expenseUnitLabel").value=unit.name;resetClosing();resetExpense();$("historyMonth").value=month();await refresh();
+      unit=result.data;showApp();$("identity").textContent=`${access.display_name} / ${unit.name}`;$("heroCopy").textContent=`Daily finance and stock for ${unit.name}.`;$("closingUnitLabel").value=unit.name;$("expenseUnitLabel").value=unit.name;resetClosing();resetExpense();$("stockOperationDate").value=today();$("historyMonth").value=month();await refresh();
     }
 
     async function refresh(){
       const m=$("historyMonth").value||month(),start=m+"-01",end=new Date(Date.UTC(+m.slice(0,4),+m.slice(5,7),1)).toISOString().slice(0,10);
-      const [c,e]=await Promise.all([
+      const [c,e,i,t,b]=await Promise.all([
         db.from("daily_closings").select("*").gte("business_date",start).lt("business_date",end).order("business_date",{ascending:false}),
-        db.from("expenses").select("*").gte("business_date",start).lt("business_date",end).order("business_date",{ascending:false})
+        db.from("expenses").select("*").gte("business_date",start).lt("business_date",end).order("business_date",{ascending:false}),
+        db.from("inventory_items").select("*").eq("active",true).order("name"),
+        db.from("inventory_stock_transfers").select("*").eq("to_unit_id",unit.id).order("created_at",{ascending:false}),
+        db.from("inventory_stock_balances").select("*").eq("unit_id",unit.id).order("item_name")
       ]);
-      if(c.error||e.error){setStatus("pageStatus",c.error?.message||e.error?.message);return}
-      closings=c.data||[];expenses=e.data||[];render();
+      if(c.error||e.error||i.error||t.error||b.error){setStatus("pageStatus",c.error?.message||e.error?.message||i.error?.message||t.error?.message||b.error?.message);return}
+      closings=c.data||[];expenses=e.data||[];inventoryItems=i.data||[];incomingTransfers=t.data||[];stockBalances=b.data||[];$("stockOperationItem").innerHTML='<option value="">SELECT ITEM</option>'+inventoryItems.map(x=>`<option value="${x.id}">${safe(x.name)} · ${safe(x.base_unit||x.unit||x.uom||"")}</option>`).join("");render();
     }
 
     function render(){
@@ -149,7 +170,12 @@
       $("todayStatus").innerHTML=todayC.length?todayC.map(x=>`<div>${safe(x.shift)} · <span class="pill ${safe(x.status)}">${safe(x.status).toUpperCase()}</span><div class="value">${rup(closingTotal(x))}</div></div>`).join(""):'<div class="empty">NO CLOSING SUBMITTED TODAY.</div>';
       const activity=[...closings.map(x=>({...x,type:"CLOSING",amount:closingTotal(x)})),...expenses.map(x=>({...x,type:"EXPENSE",amount:x.amount}))].sort((a,b)=>b.business_date.localeCompare(a.business_date)).slice(0,8);
       $("recentList").innerHTML=activity.map(x=>`<div class="row"><div>${x.business_date}</div><div>${x.type}<br><span class="pill ${safe(x.status)}">${safe(x.status||"submitted")}</span></div><div><b>${rup(x.amount)}</b></div></div>`).join("")||'<div class="empty">NO ACTIVITY YET.</div>';
-      renderClosings();renderExpenses();
+      renderClosings();renderExpenses();renderStock();
+    }
+
+    function renderStock(){
+      $("incomingStockList").innerHTML=incomingTransfers.map(x=>`<div class="row"><div>${x.business_date}</div><div>STOCK TRANSFER<br><span class="pill ${safe(x.status)}">${safe(x.status)}</span></div><div>${x.status==="dispatched"?`<button class="mini good" onclick="receiveStock('${x.id}')">RECEIVE</button>`:"RECEIVED"}</div></div>`).join("")||'<div class="empty">NO INCOMING STOCK.</div>';
+      $("outletStockList").innerHTML=stockBalances.map(x=>`<div class="row"><div>${safe(x.base_unit)}</div><div>${safe(x.item_name)}</div><div><b>${new Intl.NumberFormat("id-ID",{maximumFractionDigits:3}).format(num(x.current_stock))}</b></div></div>`).join("")||'<div class="empty">NO STOCK YET.</div>';
     }
 
     function renderClosings(){
@@ -171,6 +197,9 @@
     window.deleteExpense=async id=>{if(!confirm("Delete this expense?"))return;const result=await db.from("expenses").delete().eq("id",id);if(result.error)alert(result.error.message);else await refresh()};
     $("cancelExpense").onclick=resetExpense;
     $("expenseForm").onsubmit=async event=>{event.preventDefault();const payload={unit_id:unit.id,business_date:$("expenseDate").value,category:$("expenseCategory").value,description:$("expenseDesc").value,amount:num($("expenseAmount").value),payment_method:$("expenseMethod").value,notes:$("expenseNotes").value,created_by:user.id,status:"submitted"};const id=$("expenseId").value;$("saveExpense").disabled=true;const result=await(id?db.from("expenses").update(payload).eq("id",id):db.from("expenses").insert(payload));$("saveExpense").disabled=false;setStatus("expenseStatus",result.error?result.error.message:"EXPENSE SUBMITTED.",!result.error);if(!result.error){resetExpense();await refresh();setView("historyView")}};
+
+    window.receiveStock=async id=>{if(!confirm("Confirm that the stock has physically arrived?"))return;const result=await db.rpc("receive_inventory_stock_transfer",{p_transfer_id:id});if(result.error)alert(result.error.message);else{await refresh();setView("stockView")}};
+    $("stockOperationForm").onsubmit=async event=>{event.preventDefault();setStatus("stockOperationStatus","RECORDING...");const result=await db.rpc("record_inventory_stock_operation",{p_business_date:$("stockOperationDate").value,p_unit_id:unit.id,p_item_id:$("stockOperationItem").value,p_operation:$("stockOperationType").value,p_quantity:num($("stockOperationQuantity").value),p_notes:$("stockOperationNotes").value});setStatus("stockOperationStatus",result.error?result.error.message:"STOCK OUT RECORDED.",!result.error);if(!result.error){$("stockOperationQuantity").value="";$("stockOperationNotes").value="";await refresh()}};
 
     $("historyMonth").onchange=refresh;
     $("loginButton").onclick=async()=>{const email=$("email").value.trim(),password=$("password").value;if(!email||!password)return setStatus("loginStatus","ENTER EMAIL + PASSWORD.");$("loginButton").disabled=true;const {error}=await db.auth.signInWithPassword({email,password});$("loginButton").disabled=false;if(error)return setStatus("loginStatus",error.message);await routeUser()};
